@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\UsersController;
 
 // teste
 //Route::get('/teste', [MainController::class, 'teste']) ->name('teste');
@@ -30,5 +31,9 @@ use App\Http\Controllers\PerfilController;
 // Precisa de login e ser ADMIN
     Route::middleware(['auth:sanctum', 'verified', 'is_admin'])->group(function()
     {
-
+        // Usuarios
+        Route::resource('Users',                UsersController::class);
+        Route::get('trashed-Users',             [UsersController::class, 'trashed' ] )  ->name('trashed-Users.index');
+        Route::put('restore-Users/{category}',  [UsersController::class, 'restore' ] )  ->name('restore-Users.update');
+        Route::any('buscar-Users',              [UsersController::class, 'buscar' ] )   ->name('buscar-Users');
     });

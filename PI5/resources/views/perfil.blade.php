@@ -41,7 +41,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="nascimento">Data de Aniversário</label>
+                                    <label for="nascimento" @if( empty(Auth::user()->nascimento) ) class="text-danger" @endif >Data de Aniversário</label>
                                     <input type="date" name="nascimento" id="nascimento" placeholder="Data de Aniversário" class="form-control @error('password') is-invalid @enderror" value ="{{ substr(Auth::user()->nascimento,0,10) }}" required>
                                 </div>
 

@@ -62,20 +62,24 @@
                             <a href="charts.html"><i class="fas fa-file-invoice-dollar"></i> Premium</a>
                         </li>
 
-                        <li>
-                            <a href="#pagesmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-cog"></i> Admin</a>
-                            <ul class="collapse list-unstyled" id="pagesmenu">
+                        @if ( !empty(Auth::user()->name) )
+                            @if ( Auth::user()->isAdmin() )
                                 <li>
-                                    <a href="blank.html"><i class="fas fa-users"></i> Lista de Usuários</a>
+                                    <a href="#pagesmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-cog"></i> Admin </a>
+                                    <ul class="collapse list-unstyled" id="pagesmenu">
+                                        <li>
+                                            <a href="{{route('Users.index')}}"><i class="fas fa-users"></i> Lista de Usuários</a>
+                                        </li>
+                                        <li>
+                                            <a href="404.html"><i class="fas fa-list-alt"></i> Especialidades</a>
+                                        </li>
+                                        {{-- <li>
+                                            <a href="500.html"><i class="fas fa-toolbox"></i> Outras Configurações</a>
+                                        </li> --}}
+                                    </ul>
                                 </li>
-                                <li>
-                                    <a href="404.html"><i class="fas fa-list-alt"></i> Especialidades</a>
-                                </li>
-                                {{-- <li>
-                                    <a href="500.html"><i class="fas fa-toolbox"></i> Outras Configurações</a>
-                                </li> --}}
-                            </ul>
-                        </li>
+                            @endif
+                        @endif
 
                         <li>
                             <a href="icons.html"><i class="fas fa-info-circle"></i> Sobre</a>
