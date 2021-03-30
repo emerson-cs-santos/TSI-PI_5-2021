@@ -12,6 +12,12 @@
         <title>Saúde sob Controle</title>
         <link rel="shortcut icon" href="{{ asset('site/img/logo.png') }}" type="image/x-icon">
 
+        <!-- Manual de uso referente aos alerts customizados "swal": https://sweetalert.js.org/guides/ -->
+        <script src="{{ URL::asset('https://unpkg.com/sweetalert/dist/sweetalert.min.js') }}" ></script>
+
+        <!-- JS Geral -->
+        <script src="{{ asset('site/js/geral.js') }}"></script>
+
         <!-- CSS -->
         <link href="{{ asset('site/vendor/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet" type="text/css" >
         <link href="{{ asset('site/vendor/fontawesome/css/solid.min.css') }}" rel="stylesheet" type="text/css" >

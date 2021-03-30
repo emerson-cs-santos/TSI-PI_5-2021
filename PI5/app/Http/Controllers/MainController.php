@@ -11,15 +11,10 @@ class MainController extends Controller
         return view('index');
     }
 
-    public function perfil()
-    {
-        return view('perfil');
-    }
+    // public function teste()
+    // {
+    //     session()->flash('success', 'Informações atualizadas com sucesso!');
 
-    public function teste()
-    {
-        session()->flash('success', 'Informações atualizadas com sucesso!');
-
-        return redirect(route('perfil'));
-    }
+    //     return redirect(route('perfil'));
+    // }
 }
