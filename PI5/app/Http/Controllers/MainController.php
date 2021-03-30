@@ -15,4 +15,11 @@ class MainController extends Controller
     {
         return view('perfil');
     }
+
+    public function teste()
+    {
+        session()->flash('success', 'Informações atualizadas com sucesso!');
+
+        return redirect(route('perfil'));
+    }
 }

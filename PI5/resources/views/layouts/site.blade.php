@@ -41,7 +41,7 @@
                     <ul class="list-unstyled components text-secondary">
 
                         <li>
-                            <a href="dashboard.html"><i class="fas fa-home"></i> Home</a>
+                            <a href="{{route('index')}}"><i class="fas fa-home"></i> Home</a>
                         </li>
 
                         <li>
@@ -101,7 +101,7 @@
                                     <div class="dropdown-menu dropdown-menu-right nav-link-menu">
                                         <ul class="nav-list">
                                             <li>
-                                                <a href="/user/profile" class="dropdown-item" data-placement="top" data-toggle="tooltip" title="Acessar suas informações de acesso">
+                                                <a href="{{ route('perfil') }}" class="dropdown-item" data-placement="top" data-toggle="tooltip" title="Acessar suas informações de acesso">
                                                     <i class="fas fa-address-card"></i>
                                                     Seu Cadastro
                                                 </a>
