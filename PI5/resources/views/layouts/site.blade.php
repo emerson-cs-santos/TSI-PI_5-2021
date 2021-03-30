@@ -69,11 +69,11 @@
                                     <a href="blank.html"><i class="fas fa-users"></i> Lista de Usuários</a>
                                 </li>
                                 <li>
-                                    <a href="404.html"><i class="fas fa-list-alt"></i> Cadastro de Especialidades</a>
+                                    <a href="404.html"><i class="fas fa-list-alt"></i> Especialidades</a>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <a href="500.html"><i class="fas fa-toolbox"></i> Outras Configurações</a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
 

@@ -11,6 +11,13 @@ class MainController extends Controller
         return view('index');
     }
 
+
+
+
+
+
+
+
     // public function teste()
     // {
     //     session()->flash('success', 'Informações atualizadas com sucesso!');

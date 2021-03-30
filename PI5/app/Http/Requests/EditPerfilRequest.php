@@ -16,8 +16,8 @@ class EditPerfilRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                      => 'required|min:3'
-            ,'email'                    => [ 'required', 'email:filter', new UserEmail( request()->all() ) ]
+            'name'    => 'required|min:3'
+            ,'email'  => [ 'required', 'email:filter', new UserEmail( request()->all() ) ]
         ];
     }
 }

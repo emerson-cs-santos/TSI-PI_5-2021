@@ -16,7 +16,7 @@
             <div class="row mt-3">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">Informações de perfil</div>
+                        <div class="card-header">Informações de perfil @if( empty(Auth::user()->genero) or empty(Auth::user()->nascimento) ) - Complete seu cadastro! @endif </div>
                         <div class="card-body">
                             <form accept-charset="utf-8" action="{{route('perfil-atualizar')}}"  method="post" enctype="multipart/form-data">
                                 @csrf
@@ -33,9 +33,21 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" value="Salvar">
+                                    <label for="genero">Gênero</label>
+                                    <select name="genero" class="form-control" id="genero">
+                                        <option value="Masculino" @if( Auth::user()->genero == 'Masculino') selected @endif >Masculino</option>
+                                        <option value="Feminino" @if( Auth::user()->genero == 'Feminino') selected @endif >Feminino</option>
+                                    </select>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="nascimento">Data de Aniversário</label>
+                                    <input type="date" name="nascimento" id="nascimento" placeholder="Data de Aniversário" class="form-control @error('password') is-invalid @enderror" value ="{{ substr(Auth::user()->nascimento,0,10) }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary"> <i class="fas fa-save"></i> Salvar</button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -67,9 +79,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" value="Salvar">
+                                    <button type="submit" class="btn btn-primary"> <i class="fas fa-save"></i> Salvar</button>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -87,8 +98,7 @@
                                 @method('DELETE')
 
                                 <div class="form-group">
-
-                                    <button type="button" onclick="confirmar('Apagar conta','Você tem certeza?', this.form)" class="btn btn-danger"> Apagar Conta</button>
+                                    <button type="button" onclick="confirmar('Apagar conta','Você tem certeza?', this.form)" class="btn btn-danger"> <i class="fas fa-exclamation-triangle"></i> Apagar Conta</button>
                                 </div>
                             </form>
                         </div>

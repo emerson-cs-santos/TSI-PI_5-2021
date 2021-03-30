@@ -23,6 +23,8 @@ class PerfilController extends Controller
 
        $usuario->name = $request->name;
        $usuario->email = $request->email;
+       $usuario->genero = $request->genero;
+       $usuario->nascimento = $request->nascimento;
 
         if($usuario->email != $request->email){
             $usuario->email = $request->email;
