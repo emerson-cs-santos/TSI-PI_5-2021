@@ -24,7 +24,7 @@
 
                                     @if( Request::path() !== 'trashed-Especialidades' )
                                         <div class='d-flex mb-2 justify-content-center'>
-                                            <a href="{{route('Especialidades.create')}}" class='btn btn-success'>Novo</a>
+                                            <a href="{{route('Especialidades.create')}}" class='btn btn-success'> <i class="fas fa-plus"></i> Novo</a>
                                         </div>
                                     @endif
 
