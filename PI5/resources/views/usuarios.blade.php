@@ -143,11 +143,14 @@
                                     </div>
                                     <!---End of Pagination-->
 
-                                    @if( Request::path() == 'trashed-Users' )
-                                        <a href="{{route('Users.index')}}" class='btn btn-info'> <i class="fas fa-arrow-left"></i> Voltar ao cadastro</a>
-                                    @else
-                                        <a href="{{ route('trashed-Users.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar registros excluídos"><i class="fas fa-recycle"></i> Lixeira</a>
-                                    @endif
+                                    <div class="col-12 mt-3 d-flex justify-content-center mb-3">
+                                        @if( Request::path() == 'trashed-Users' )
+                                            <a href="{{route('Users.index')}}" class='btn btn-info'> <i class="fas fa-arrow-left"></i> Voltar ao cadastro</a>
+                                        @else
+                                            <a href="{{ route('trashed-Users.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar registros excluídos"><i class="fas fa-recycle"></i> Lixeira</a>
+                                        @endif
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
