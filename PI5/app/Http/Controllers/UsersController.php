@@ -42,7 +42,7 @@ class UsersController extends Controller
     public function trashed()
     {
         $users = User::selectRaw('users.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
-        return view('admin.usuario.index', ['usuarios' => $users]);
+        return view('usuarios', ['usuarios' => $users]);
     }
 
 
@@ -72,7 +72,7 @@ class UsersController extends Controller
 
             $pagination = $users->appends ( array ('busca' => $request->input('busca')  ) );
 
-            return view('admin.usuario.index')
+            return view('usuarios')
             ->with('usuarios',$users )->withQuery ( $buscar )
             ->with('busca',$buscar);
         }
@@ -83,9 +83,35 @@ class UsersController extends Controller
             ->paginate(5)
             ->setPath ( '' );
 
-            return view('admin.usuario.index')
+            return view('usuarios')
             ->with('usuarios', $users )
             ->with('busca','');
         }
+    }
+
+    // Mudar nível de acesso
+    public function typeUpdate($id)
+    {
+        $user = User::withTrashed()->where('id', $id)->firstOrFail();
+
+        $nivel = 'Nível de acesso do ' . $user->name . ' alterado com sucesso para ';
+        $nivelAcessoExibicao = '';
+
+        if ( $user->type == 'default' )
+        {
+            $user->type = 'admin';
+            $nivelAcessoExibicao = 'Administrador';
+        }
+        else
+        {
+            $user->type = 'default';
+            $nivelAcessoExibicao = 'Padrão';
+        }
+
+        $user->save();
+
+        $nivel = $nivel . $nivelAcessoExibicao . '!';
+        session()->flash('success',  $nivel);
+        return redirect()->back();
     }
 }

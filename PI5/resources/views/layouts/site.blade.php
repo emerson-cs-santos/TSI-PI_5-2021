@@ -68,7 +68,7 @@
                                     <a href="#pagesmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-cog"></i> Admin </a>
                                     <ul class="collapse list-unstyled" id="pagesmenu">
                                         <li>
-                                            <a href="{{route('Users.index')}}"><i class="fas fa-users"></i> Lista de Usuários</a>
+                                            <a href="{{route('Users.index')}}"><i class="fas fa-users"></i> Usuários</a>
                                         </li>
                                         <li>
                                             <a href="404.html"><i class="fas fa-list-alt"></i> Especialidades</a>

@@ -19,26 +19,8 @@
                         <div class="row align-items-center">
 
                             {{-- Conteiner final onde as informações são de fato exibidas --}}
-                            <div class="container mt-5">
+                            <div class="container">
                                 <div class="col-12">
-
-                                    @if (session()->has('success'))
-                                        <div class="alert alert-success">
-                                            {{ session()->get('success') }}
-                                        </div>
-                                    @endif
-
-                                    @if(session()->has('error'))
-                                        <div class="alert alert-danger">{{ session()->get('error') }}</div>
-                                    @endif
-
-
-
-                                    @if( Request::path() !== 'trashed-Users' )
-                                        <div class='d-flex mb-2 justify-content-center'>
-                                            <a href="{{route('Users.create')}}" class='btn btn-success'>Novo</a>
-                                        </div>
-                                    @endif
 
                                     @if( Request::path() !== 'trashed-Users')
                                         <form action="/buscar-Users" method="POST" role="search">
@@ -81,19 +63,33 @@
                                                     <td>{{ $usuario->type == 'admin' ? ' Administrador' : 'Padrão' }}</td>
 
                                                     @if(!$usuario->trashed())
-                                                        <td>
-                                                            <a href="{{ route('Users.show', $usuario->id) }}" class="btn btn-xs btn-primary">Visualizar</a>
-                                                        </td>
+
+                                                        @php
+                                                            $mudancaDescricao = '';
+
+                                                            if ( $usuario->type == 'admin' )
+                                                            {
+                                                                $mudancaDescricao = 'Administrador -> Padrão';
+                                                            }
+                                                            else
+                                                            {
+                                                                $mudancaDescricao = 'Padrão -> Administrador';
+                                                            }
+                                                        @endphp
 
                                                         <td>
-                                                            <a href="{{ route('Users.edit', $usuario->id) }}" class="btn btn-xs btn-warning">Editar</a>
+                                                            <form action="{{ route('perfil-type', $usuario->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="button" onclick="confirmar('Alterar Nível de acesso','{{$mudancaDescricao}}', this.form)" class="btn btn-xs btn-warning"> <i class="fas fa-users-cog"></i> Alterar Nível</button>
+                                                            </form>
                                                         </td>
                                                     @else
                                                         <td>
                                                             <form action="{{ route('restore-Users.update', $usuario->id) }}" method="POST">
                                                                 @csrf
                                                                 @method('PUT')
-                                                                <button type="button" onclick="confirmar('Reativar registro','Você tem certeza?', this.form)" class="btn btn-primary btn-xs float-center ml-1">Reativar</button>
+                                                                <button type="button" onclick="confirmar('Reativar registro','Você tem certeza?', this.form)" class="btn btn-primary btn-xs float-center ml-1"> <i class="fas fa-trash-restore"></i> Reativar</button>
                                                             </form>
                                                         </td>
                                                     @endif
@@ -105,7 +101,7 @@
                                                             @php
                                                                 $acaoDeletar = $usuario->trashed() ? 'Apagar' : 'Mover para Lixeira';
                                                             @endphp
-                                                            <button type="button" onclick="confirmar('{{ $acaoDeletar }}','Você tem certeza?', this.form)" class="btn btn-danger btn-xs float-center"> {{ $acaoDeletar}} </button>
+                                                            <button type="button" onclick="confirmar('{{ $acaoDeletar }}','Você tem certeza?', this.form)" class="btn btn-danger btn-xs float-center"> <i class="fas fa-trash-alt"></i> {{ $acaoDeletar}} </button>
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -148,9 +144,9 @@
                                     <!---End of Pagination-->
 
                                     @if( Request::path() == 'trashed-Users' )
-                                        <a href="{{route('Users.index')}}" class='btn btn-info'>Voltar ao cadastro</a>
+                                        <a href="{{route('Users.index')}}" class='btn btn-info'> <i class="fas fa-arrow-left"></i> Voltar ao cadastro</a>
                                     @else
-                                        <a href="{{ route('trashed-Users.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar registros excluídos">Lixeira</a>
+                                        <a href="{{ route('trashed-Users.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar registros excluídos"><i class="fas fa-recycle"></i> Lixeira</a>
                                     @endif
                                 </div>
                             </div>

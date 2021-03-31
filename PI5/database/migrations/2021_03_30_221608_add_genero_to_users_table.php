@@ -9,7 +9,7 @@ class AddGeneroToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('genero');
+            $table->string('genero')->default('Masculino');;
         });
     }
 

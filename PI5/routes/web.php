@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\EspecialidadesController;
 
 // teste
 //Route::get('/teste', [MainController::class, 'teste']) ->name('teste');
@@ -33,7 +34,14 @@ use App\Http\Controllers\UsersController;
     {
         // Usuarios
         Route::resource('Users',                UsersController::class);
-        Route::get('trashed-Users',             [UsersController::class, 'trashed' ] )  ->name('trashed-Users.index');
-        Route::put('restore-Users/{category}',  [UsersController::class, 'restore' ] )  ->name('restore-Users.update');
-        Route::any('buscar-Users',              [UsersController::class, 'buscar' ] )   ->name('buscar-Users');
+        Route::get('trashed-Users',             [UsersController::class, 'trashed' ] )      ->name('trashed-Users.index');
+        Route::put('restore-Users/{user}',      [UsersController::class, 'restore' ] )      ->name('restore-Users.update');
+        Route::any('buscar-Users',              [UsersController::class, 'buscar' ] )       ->name('buscar-Users');
+        Route::put('perfil-type/{user}',        [UsersController::class, 'typeUpdate' ] )   ->name('perfil-type');
+
+        // Especialidades
+        Route::resource('Especialidades',                       EspecialidadesController::class);
+        Route::get('trashed-Especialidades',                    [EspecialidadesController::class, 'trashed' ] )      ->name('trashed-Users.index');
+        Route::put('restore-Especialidades/{especialidades}',   [EspecialidadesController::class, 'restore' ] )      ->name('restore-Users.update');
+        Route::any('buscar-Especialidades',                     [EspecialidadesController::class, 'buscar' ] )       ->name('buscar-Users');
     });
