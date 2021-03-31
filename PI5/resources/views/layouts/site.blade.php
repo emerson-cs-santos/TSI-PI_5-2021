@@ -71,7 +71,7 @@
                                             <a href="{{route('Users.index')}}"><i class="fas fa-users"></i> Usuários</a>
                                         </li>
                                         <li>
-                                            <a href="404.html"><i class="fas fa-list-alt"></i> Especialidades</a>
+                                            <a href="{{route('Especialidades.index')}}"><i class="fas fa-list-alt"></i> Especialidades</a>
                                         </li>
                                         {{-- <li>
                                             <a href="500.html"><i class="fas fa-toolbox"></i> Outras Configurações</a>

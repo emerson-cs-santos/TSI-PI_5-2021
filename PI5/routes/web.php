@@ -41,7 +41,7 @@ use App\Http\Controllers\EspecialidadesController;
 
         // Especialidades
         Route::resource('Especialidades',                       EspecialidadesController::class);
-        Route::get('trashed-Especialidades',                    [EspecialidadesController::class, 'trashed' ] )      ->name('trashed-Users.index');
-        Route::put('restore-Especialidades/{especialidades}',   [EspecialidadesController::class, 'restore' ] )      ->name('restore-Users.update');
-        Route::any('buscar-Especialidades',                     [EspecialidadesController::class, 'buscar' ] )       ->name('buscar-Users');
+        Route::get('trashed-Especialidades',                    [EspecialidadesController::class, 'trashed' ] )      ->name('trashed-Especialidades.index');
+        Route::put('restore-Especialidades/{especialidade}',   [EspecialidadesController::class, 'restore' ] )      ->name('restore-Especialidades.update');
+        Route::any('buscar-Especialidades',                     [EspecialidadesController::class, 'buscar' ] )       ->name('buscar-Especialidades');
     });
