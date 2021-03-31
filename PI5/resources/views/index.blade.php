@@ -58,8 +58,8 @@
                             <div class="card">
                                 <div class="content">
                                     <div class="dfd text-center">
-                                        <a href="/casos" data-placement="top" data-toggle="tooltip" title="Clique para criar seu cadastro!"> <i class="blue large-icon mb-2 fas fa-file-medical-alt"></i> </a>
-                                        <a href="/casos" class="h4" data-placement="top" data-toggle="tooltip" title="Clique para criar seu cadastro!"> <p class="h4">Acessar meus casos</p> </a>
+                                        <a href="{{route('Casos.index')}}" data-placement="top" data-toggle="tooltip" title="Clique para criar seu cadastro!"> <i class="blue large-icon mb-2 fas fa-file-medical-alt"></i> </a>
+                                        <a href="{{route('Casos.index')}}" class="h4" data-placement="top" data-toggle="tooltip" title="Clique para criar seu cadastro!"> <p class="h4">Acessar meus casos</p> </a>
                                     </div>
                                 </div>
                             </div>

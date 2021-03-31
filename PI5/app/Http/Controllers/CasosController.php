@@ -3,42 +3,45 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Especialidade;
-use App\Http\Requests\CreateEspecialidadesRequest;
-use App\Http\Requests\EditEspecialidadesRequest;
+use App\Models\Caso;
+use App\Http\Requests\CreateCasosRequest;
+use App\Http\Requests\EditCasosRequest;
+use Illuminate\Support\Facades\Auth;
 
-class EspecialidadesController extends Controller
+class CasosController extends Controller
 {
-
     public function index()
     {
-        $especialidades = Especialidade::selectRaw('especialidades.*')->orderByDesc('id')->paginate(5);
+        $casos = Caso::selectRaw('casos.*')->where('user_id', '=', Auth::user()->id )->orderByDesc('id')->paginate(5);
 
-        return view('especialidades.index', ['especialidades' => $especialidades]);
+        return view('casos.index', ['casos' => $casos]);
     }
-
 
     public function create()
     {
-        return view('especialidades.create');
+        return view('casos.create');
     }
 
 
-    public function store(CreateEspecialidadesRequest $request)
+    public function store(CreateCasosRequest $request)
     {
-        Especialidade::create([
-            'name'  => $request->name
+        Caso::create([
+            'user_id'       => Auth::user()->id
+            ,'nome'         => $request->name
+            ,'desc'         => $request->desc
+            ,'status'       => $request->status
+            ,'medicamentos' => $request->medicamentos
         ]);
 
-       session()->flash('success', 'Especialidade criada com sucesso!');
+       session()->flash('success', 'Caso criado com sucesso!');
 
-        return redirect(route('Especialidades.index'));
+        return redirect(route('Casos.index'));
     }
 
 
     public function show( $id )
     {
-        $especialidade = Especialidade::withTrashed()->where('id', $id)->firstOrFail();
+        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
         return view('Especialidades.show')->with('especialidade', $especialidade);
     }
@@ -46,38 +49,28 @@ class EspecialidadesController extends Controller
 
     public function edit( $id )
     {
-        $especialidade = Especialidade::withTrashed()->where('id', $id)->firstOrFail();
+        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
         return view('Especialidades.edit')->with('especialidade', $especialidade);
     }
 
 
-    public function update( EditEspecialidadesRequest $request, $id )
+    public function update( EditCasosRequest $request, $id )
     {
-        $especialidade = Especialidade::withTrashed()->where('id', $id)->firstOrFail();
+        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
         $especialidade->update([
             'name'  => $request->name
         ]);
 
-        session()->flash('success', 'Especialidade alterada com sucesso!');
+        session()->flash('success', 'Caso alterado com sucesso!');
         return redirect(route('Especialidades.index'));
     }
 
 
     public function destroy($id)
     {
-        $especialidade = Especialidade::withTrashed()->where('id', $id)->firstOrFail();
-
-        // Validar se Especialidade está sendo utilizado em alguma ocorrencia, se tiver, não pode excluir
-
-        // $qtdProdutos = $category->products()->count();
-
-        // if( $qtdProdutos > 0 )
-        // {
-        //     session()->flash('error', "Existem $qtdProdutos produtos com essa categoria!");
-        //     return redirect()->back();
-        // }
+        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
         if($especialidade->trashed())
         {
@@ -94,13 +87,13 @@ class EspecialidadesController extends Controller
 
     public function trashed()
     {
-        $especialidades = Especialidade::selectRaw('especialidades.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
+        $especialidades = Caso::selectRaw('especialidades.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
         return view('especialidades.index', ['especialidades' => $especialidades]);
     }
 
     public function restore($id)
     {
-        $especialidade = Especialidade::withTrashed()->where('id', $id)->firstOrFail();
+        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
         $especialidade->restore();
         session()->flash('success', 'Especialidade ativada com sucesso!');
         return redirect()->back();
@@ -112,7 +105,7 @@ class EspecialidadesController extends Controller
 
         if($buscar != "")
         {
-            $especialidades = Especialidade::selectRaw('especialidades.*')
+            $especialidades = Caso::selectRaw('especialidades.*')
             ->where ( 'especialidades.name', 'LIKE', '%' . $buscar . '%' )
             ->orWhere ( 'especialidades.id', 'LIKE', '%' . $buscar . '%' )
             ->orderBy('name')
@@ -127,7 +120,7 @@ class EspecialidadesController extends Controller
         }
         else
         {
-            $especialidades = Especialidade::selectRaw('especialidades.*')
+            $especialidades = Caso::selectRaw('especialidades.*')
             ->orderBy('name')
             ->paginate(5)
             ->setPath ( '' );
@@ -137,5 +130,4 @@ class EspecialidadesController extends Controller
             ->with('busca','');
         }
     }
-
 }

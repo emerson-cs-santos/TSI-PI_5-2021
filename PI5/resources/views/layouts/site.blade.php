@@ -51,7 +51,7 @@
                         </li>
 
                         <li>
-                            <a href="forms.html"><i class="fas fa-notes-medical"></i> Casos médicos</a>
+                            <a href="{{route('Casos.index')}}"><i class="fas fa-notes-medical"></i> Casos médicos</a>
                         </li>
 
                         <li>
