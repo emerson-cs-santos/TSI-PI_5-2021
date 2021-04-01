@@ -23,7 +23,7 @@
                                 @method('PUT')
 
                                 <div class="form-group">
-                                    <label for="name">Nome</label>
+                                    <label for="name">Nome*</label>
                                     <input type="text" class='form-control' name="name" id="name" autofocus required placeholder="Digite o nome da especialidade" value="{{$especialidade->name}}">
                                 </div>
 

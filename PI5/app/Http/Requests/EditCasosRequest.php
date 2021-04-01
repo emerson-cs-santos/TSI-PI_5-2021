@@ -14,7 +14,7 @@ class EditCasosRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome'      => 'required|min:8'
+            'nome'      => 'required|min:5'
             ,'status'   => 'required'
         ];
     }

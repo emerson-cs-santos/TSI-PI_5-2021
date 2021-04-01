@@ -11,16 +11,17 @@ class CreateOcorrenciasTable extends Migration
         Schema::create('ocorrencias', function (Blueprint $table) {
             $table->id();
             $table->softDeletes();
+            $table->integer('user_id')->references('id')->on('users');
             $table->integer('caso_id')->references('id')->on('casos');
             $table->integer('especialidade_id')->references('id')->on('especialidades');
             $table->string('tipo')->default('C');
             $table->timestamp('data')->nullable();
-            $table->text('medico');
-            $table->text('crm');
-            $table->text('receitas');
-            $table->text('local');
-            $table->text('desc');
-            $table->text('resumo');
+            $table->text('medico')->default('');
+            $table->text('crm')->default('');
+            $table->text('receitas')->default('');
+            $table->text('local')->default('');
+            $table->text('desc')->default('');
+            $table->text('resumo')->default('');
             $table->string('importancia')->default('R');
             $table->timestamps();
         });

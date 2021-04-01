@@ -54,7 +54,7 @@
                                                     <th>Nome</th>
                                                     <th>Status</th>
                                                     @if( count($casos) > 0 )
-                                                        <th class="text-center" @if( Request::path() == 'trashed-Casos' ) colspan="2" @else colspan="3" @endif >Ações</th>
+                                                        <th class="text-center" @if( Request::path() == 'trashed-Casos' ) colspan="2" @else colspan="4" @endif >Ações</th>
                                                     @endif
                                                 </tr>
                                             </thead>
@@ -62,37 +62,22 @@
                                                 @foreach($casos as $caso)
                                                 <tr>
                                                     <td>{{$caso->nome}}</td>
-
-                                                    @php
-                                                        $statusDesc = '';
-
-                                                        switch ( $caso->status )
-                                                        {
-                                                            case "I":
-                                                                $statusDesc = "Em investigação";
-                                                                break;
-
-                                                            case "D":
-                                                                $statusDesc = "Doença controlada";
-                                                                break;
-
-                                                            case "C":
-                                                                $statusDesc = "Curado";
-                                                                break;
-
-                                                            default:
-                                                                $statusDesc = "Não definido";
-                                                        }
-                                                    @endphp
-                                                    <td>{{$statusDesc}}</td>
+                                                    <td>{{$caso->status}}</td>
 
                                                     @if(!$caso->trashed())
+
                                                         <td>
                                                             <a href="{{ route('Casos.show', $caso->id) }}" class="btn btn-xs btn-primary"><i class="fas fa-eye"></i> Visualizar</a>
                                                         </td>
+
                                                         <td>
-                                                            <a href="{{ route('Casos.edit', $caso->id) }}" class="btn btn-xs btn-warning"> <i class="fas fa-edit"></i>Editar</a>
+                                                            <a href="{{ route('Casos.edit', $caso->id) }}" class="btn btn-xs btn-warning"> <i class="fas fa-edit"></i> Editar</a>
                                                         </td>
+
+                                                        <td>
+                                                            <a href="{{ route('casos-index', $caso->id) }}" class="btn btn-xs btn-secondary"> <i class="fas fa-file-medical"></i> Ocorrencias</a>
+                                                        </td>
+
                                                         @else
                                                         <td>
                                                             <form action="{{ route('restore-Casos.update', $caso->id) }}" method="POST">

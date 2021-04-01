@@ -22,17 +22,28 @@
                                 @csrf
 
                                 <div class="form-group">
-                                    <label for="name">Nome</label>
-                                    <input type="text" class='form-control' name="name" id="name" autofocus required placeholder="Digite o nome do Caso" value="{{old('nome')}}">
+                                    <label for="nome">Nome*</label>
+                                    <input type="text" class='form-control' name="nome" id="name" autofocus required placeholder="Digite o nome do Caso" value="{{old('nome')}}">
                                 </div>
 
-                                desc
+                                <div class="form-group">
+                                    <label for="descricao">Descrição*</label>
+                                    <textarea name="descricao" class='form-control' id="descricao" required rows=10 placeholder="Digite uma descrição para o caso">{{old('descricao')}}</textarea>
+                                </div>
 
-                                status
+                                <div class="form-group">
+                                    <label for="status">Status*</label>
+                                    <select name="status" class="form-control" id="status" >
+                                        <option value="Em investigação" @if( old('status') == 'Em investigação') selected @endif >Em investigação</option>
+                                        <option value="Doença controlada" @if( old('status') == 'Doença controlada') selected @endif >Doença controlada com remédio contínuo</option>
+                                        <option value="Curado" @if( old('status') == 'Curado') selected @endif >Curado</option>
+                                    </select>
+                                </div>
 
-                                medicamentos
-
-                                Abrir ocorrencias
+                                <div class="form-group">
+                                    <label for="medicamentos">Medicamentos</label>
+                                    <textarea name="medicamentos" class='form-control' id="medicamentos" rows=10 placeholder="Digite os medicamentos que estão sendo utilizados">{{old('medicamentos')}}</textarea>
+                                </div>
 
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-success"> <i class="fas fa-save"></i> Salvar</button>

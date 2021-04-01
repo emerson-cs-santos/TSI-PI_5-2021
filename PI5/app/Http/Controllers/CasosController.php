@@ -25,10 +25,16 @@ class CasosController extends Controller
 
     public function store(CreateCasosRequest $request)
     {
+
+        if ( empty($request->medicamentos) )
+        {
+            $request->medicamentos = ' ';
+        }
+
         Caso::create([
             'user_id'       => Auth::user()->id
-            ,'nome'         => $request->name
-            ,'desc'         => $request->desc
+            ,'nome'         => $request->nome
+            ,'desc'         => $request->descricao
             ,'status'       => $request->status
             ,'medicamentos' => $request->medicamentos
         ]);
@@ -41,61 +47,72 @@ class CasosController extends Controller
 
     public function show( $id )
     {
-        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
+        $caso = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
-        return view('Especialidades.show')->with('especialidade', $especialidade);
+        return view('Casos.show')->with('caso', $caso);
     }
 
 
     public function edit( $id )
     {
-        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
+        $caso = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
-        return view('Especialidades.edit')->with('especialidade', $especialidade);
+        return view('Casos.edit')->with('caso', $caso);
     }
 
 
     public function update( EditCasosRequest $request, $id )
     {
-        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
+        $caso = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
-        $especialidade->update([
-            'name'  => $request->name
+        if ( empty($request->medicamentos) )
+        {
+            $request->medicamentos = ' ';
+        }
+
+        $caso->update([
+            'user_id'       => Auth::user()->id
+            ,'nome'         => $request->nome
+            ,'desc'         => $request->descricao
+            ,'status'       => $request->status
+            ,'medicamentos' => $request->medicamentos
         ]);
 
         session()->flash('success', 'Caso alterado com sucesso!');
-        return redirect(route('Especialidades.index'));
+        return redirect(route('Casos.index'));
     }
 
 
     public function destroy($id)
     {
-        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
+        $caso = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
-        if($especialidade->trashed())
+        if($caso->trashed())
         {
-            $especialidade->forceDelete();
-            session()->flash('success', 'Especialidade removida com sucesso!');
+            // Apagar todas as ocorrencias do caso
+
+            $caso->forceDelete();
+            session()->flash('success', 'Caso removido com sucesso!');
         }
         else
         {
-            $especialidade->delete();
-            session()->flash('success', 'Especialidade movida para lixeira com sucesso!');
+            $caso->delete();
+            session()->flash('success', 'Caso movido para lixeira com sucesso!');
         }
         return redirect()->back();
     }
 
     public function trashed()
     {
-        $especialidades = Caso::selectRaw('especialidades.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
-        return view('especialidades.index', ['especialidades' => $especialidades]);
+        $casos = Caso::selectRaw('casos.*')->onlyTrashed()->where('user_id', '=', Auth::user()->id )->orderByDesc('id')->paginate(5);
+        return view('Casos.index', ['casos' => $casos]);
     }
 
     public function restore($id)
     {
-        $especialidade = Caso::withTrashed()->where('id', $id)->firstOrFail();
-        $especialidade->restore();
-        session()->flash('success', 'Especialidade ativada com sucesso!');
+        $caso = Caso::withTrashed()->where('id', $id)->firstOrFail();
+        $caso->restore();
+        session()->flash('success', 'Caso ativado com sucesso!');
         return redirect()->back();
     }
 
@@ -105,28 +122,31 @@ class CasosController extends Controller
 
         if($buscar != "")
         {
-            $especialidades = Caso::selectRaw('especialidades.*')
-            ->where ( 'especialidades.name', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'especialidades.id', 'LIKE', '%' . $buscar . '%' )
-            ->orderBy('name')
+            $casos = Caso::selectRaw('casos.*')
+            ->where('user_id', '=', Auth::user()->id )
+            ->where ( 'casos.nome', 'LIKE', '%' . $buscar . '%' )
+            ->orWhere ( 'casos.id', 'LIKE', '%' . $buscar . '%' )
+            ->orWhere ( 'casos.status', 'LIKE', '%' . $buscar . '%' )
+            ->orderBy('nome')
             ->paginate(5)
             ->setPath ( '' );
 
-            $pagination = $especialidades->appends ( array ('busca' => $request->input('busca')  ) );
+            $pagination = $casos->appends ( array ('busca' => $request->input('busca')  ) );
 
-            return view('especialidades.index')
-            ->with('especialidades',$especialidades )->withQuery ( $buscar )
+            return view('Casos.index')
+            ->with('casos',$casos )->withQuery ( $buscar )
             ->with('busca',$buscar);
         }
         else
         {
-            $especialidades = Caso::selectRaw('especialidades.*')
-            ->orderBy('name')
+            $casos = Caso::selectRaw('casos.*')
+            ->where('user_id', '=', Auth::user()->id )
+            ->orderBy('nome')
             ->paginate(5)
             ->setPath ( '' );
 
-            return view('especialidades.index')
-            ->with('especialidades', $especialidades )
+            return view('Casos.index')
+            ->with('casos', $casos )
             ->with('busca','');
         }
     }
