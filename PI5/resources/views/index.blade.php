@@ -13,6 +13,8 @@
                         <img src="{{asset('site/img/menuLogo_original.png')}}" class="w-25 h-25" alt="Logo do site">
                     </div>
 
+                    @include('exibirAlert')
+
                     <p class="mt-3 h5">Cansado de não sentir que está progredindo em um problema médico? </p>
                     <p>Isso pode estar ocorrendo por não estar juntando todas as informações que cada médico descobre. O Correto seria os próprios médicos passarem essas informações entre si, mas isso quase sempre não é possível, ainda mais trocando de clinicas atendidas pelo convenio ou mesmo pelo SUS.</p>
                     <p>Aqui é possível fazer total controle não só seu, mas de pessoas que estão sob seus cuidados.</p>

@@ -40,6 +40,10 @@
                     </a>
                 @endif --}}
 
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('register') }}">
+                    {{ __('Não tem cadastro?') }}
+                </a>
+
                 <x-jet-button class="ml-4">
                     {{ __('Entrar') }}
                 </x-jet-button>

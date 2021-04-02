@@ -12,4 +12,9 @@ class Especialidade extends Model
 
     use SoftDeletes;
     protected $fillable =['name'];
+
+    public function ocorrencias()
+    {
+        Return $this->hasMany(Ocorrencia::class, 'especialidade_id');
+    }
 }

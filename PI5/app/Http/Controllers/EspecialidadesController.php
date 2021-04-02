@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Especialidade;
+use App\Models\Ocorrencia;
 use App\Http\Requests\CreateEspecialidadesRequest;
 use App\Http\Requests\EditEspecialidadesRequest;
 
@@ -64,20 +65,19 @@ class EspecialidadesController extends Controller
         return redirect(route('Especialidades.index'));
     }
 
-
     public function destroy($id)
     {
         $especialidade = Especialidade::withTrashed()->where('id', $id)->firstOrFail();
 
         // Validar se Especialidade está sendo utilizado em alguma ocorrencia, se tiver, não pode excluir
 
-        // $qtdProdutos = $category->products()->count();
+        $qtdOcorrencias = $especialidade->ocorrencias()->count();
 
-        // if( $qtdProdutos > 0 )
-        // {
-        //     session()->flash('error', "Existem $qtdProdutos produtos com essa categoria!");
-        //     return redirect()->back();
-        // }
+        if( $qtdOcorrencias > 0 )
+        {
+            session()->flash('error', "Existem $qtdOcorrencias Ocorrências com essa especialidade!");
+            return redirect()->back();
+        }
 
         if($especialidade->trashed())
         {

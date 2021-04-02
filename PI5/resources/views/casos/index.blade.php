@@ -53,6 +53,7 @@
                                                 <tr>
                                                     <th>Nome</th>
                                                     <th>Status</th>
+                                                    <th>Qtd. Ocorrências</th>
                                                     @if( count($casos) > 0 )
                                                         <th class="text-center" @if( Request::path() == 'trashed-Casos' ) colspan="2" @else colspan="4" @endif >Ações</th>
                                                     @endif
@@ -63,6 +64,7 @@
                                                 <tr>
                                                     <td>{{$caso->nome}}</td>
                                                     <td>{{$caso->status}}</td>
+                                                    <td>{{$caso->ocorrencias()->count()}}</td>
 
                                                     @if(!$caso->trashed())
 

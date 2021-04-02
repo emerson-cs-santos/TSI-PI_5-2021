@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Caso;
+use App\Models\Ocorrencia;
 use App\Http\Requests\CreateCasosRequest;
 use App\Http\Requests\EditCasosRequest;
 use Illuminate\Support\Facades\Auth;
@@ -87,9 +88,18 @@ class CasosController extends Controller
     {
         $caso = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
-        if($caso->trashed())
+        if( $caso->trashed() )
         {
             // Apagar todas as ocorrencias do caso
+            $ocorrenciasApagar = Ocorrencia::withTrashed()
+                ->where('user_id', Auth::user()->id )
+                ->where('caso_id', $id )
+                ->get();
+
+            foreach ($ocorrenciasApagar as $ocorrenciaApagar)
+            {
+                $ocorrenciaApagar->forceDelete();
+            }
 
             $caso->forceDelete();
             session()->flash('success', 'Caso removido com sucesso!');

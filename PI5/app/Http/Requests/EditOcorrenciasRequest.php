@@ -16,7 +16,7 @@ class EditOcorrenciasRequest extends FormRequest
         return [
             'especialidade_id' => 'required'
             ,'tipo'             => 'required'
-            ,'data'             => 'required'
+            ,'data'             => 'required|date'
             ,'importancia'      => 'required'
             ,'resumo'           => 'required|min:10'
         ];

@@ -52,7 +52,7 @@
 
                                                     <div class="form-group">
                                                         <label for="data">Data da ocorrência*</label>
-                                                        <input type="date" name="data" id="data" placeholder="Data da ocorrência" class="form-control" value ="{{ substr( old('tipo') ,0,10) }}" required>
+                                                        <input type="date" name="data" id="data" placeholder="Data da ocorrência" class="form-control" value ="{{ substr( old('data') ,0,10) }}" required>
                                                     </div>
 
                                                     <div class="form-group">

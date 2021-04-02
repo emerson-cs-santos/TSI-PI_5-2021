@@ -33,6 +33,16 @@ class OcorrenciasController extends Controller
 
     public function store(CreateOcorrenciasRequest $request, $casoId)
     {
+       // Proteção para não colocar data maior que a data atual
+       $dataNovaSemFormatar = strtotime($request->data);
+       $dataNova = date('d-m-Y',$dataNovaSemFormatar);
+
+      if (  $dataNova > date('d/m/Y') )
+      {
+           session()->flash('error', "Data informada: $dataNova é maior que a data de hoje: " . date('d/m/Y'));
+           return redirect()->back();
+      }
+
         if ( empty($request->local) )
         {
             $request->local = ' ';
@@ -80,7 +90,7 @@ class OcorrenciasController extends Controller
 
     public function show( $casoId, $ocorrenciaId )
     {
-        $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->firstOrFail();
+        $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->where('user_id', '=', Auth::user()->id )->firstOrFail();
 
         return view('ocorrencias.show')->with( ['casoId' => $casoId] )->with('ocorrencia', $ocorrencia)->with('especialidades', Especialidade::orderBy('name')->get() );
     }
@@ -88,7 +98,7 @@ class OcorrenciasController extends Controller
 
     public function edit( $casoId, $ocorrenciaId )
     {
-        $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->firstOrFail();
+        $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->where('user_id', '=', Auth::user()->id )->firstOrFail();
 
         return view('ocorrencias.edit')->with( ['casoId' => $casoId] )->with('ocorrencia', $ocorrencia)->with('especialidades', Especialidade::orderBy('name')->get() );
     }
@@ -96,6 +106,16 @@ class OcorrenciasController extends Controller
 
     public function update( EditOcorrenciasRequest $request, $casoId, $ocorrenciaId )
     {
+       // Proteção para não colocar data maior que a data atual
+        $dataNovaSemFormatar = strtotime($request->data);
+        $dataNova = date('d-m-Y',$dataNovaSemFormatar);
+
+       if (  $dataNova > date('d/m/Y') )
+       {
+            session()->flash('error', "Data informada: $dataNova é maior que a data de hoje: " . date('d/m/Y'));
+            return redirect()->back();
+       }
+
         $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->firstOrFail();
 
         if ( empty($request->local) )
@@ -144,12 +164,12 @@ class OcorrenciasController extends Controller
 
     public function destroy( $casoId, $ocorrenciaId )
     {
-        $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->firstOrFail();
+        $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->where('user_id', '=', Auth::user()->id )->firstOrFail();
 
         if($ocorrencia->trashed())
         {
             $ocorrencia->forceDelete();
-            session()->flash('success', 'Ocorrência removido com sucesso!');
+            session()->flash('success', 'Ocorrência removida com sucesso!');
         }
         else
         {

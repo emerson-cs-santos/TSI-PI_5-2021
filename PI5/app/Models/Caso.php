@@ -11,4 +11,9 @@ class Caso extends Model
     use HasFactory;
     use SoftDeletes;
     protected $fillable =['nome','status', 'user_id', 'desc', 'medicamentos'];
+
+    public function ocorrencias()
+    {
+        Return $this->hasMany(Ocorrencia::class, 'caso_id');
+    }
 }

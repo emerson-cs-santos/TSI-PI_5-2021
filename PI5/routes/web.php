@@ -20,7 +20,7 @@ use App\Http\Controllers\OcorrenciasController;
     Route::get('/dashboard', [MainController::class, 'index']) ->name('dashboard');
 
     // Sobre
-    // usar MainController
+        // usar MainController
 
 // Precisa de login
     Route::middleware(['auth:sanctum', 'verified'])->group(function()
@@ -54,7 +54,7 @@ use App\Http\Controllers\OcorrenciasController;
         // Relatório
 
         // Premium
-        // usar MainController
+            // usar MainController
     });
 
 
