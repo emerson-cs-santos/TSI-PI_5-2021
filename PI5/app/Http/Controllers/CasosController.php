@@ -14,7 +14,7 @@ class CasosController extends Controller
     {
         $casos = Caso::selectRaw('casos.*')->where('user_id', '=', Auth::user()->id )->orderByDesc('id')->paginate(5);
 
-        return view('casos.index', ['casos' => $casos]);
+        return view('casos.index', ['casos' => $casos] );
     }
 
     public function create()

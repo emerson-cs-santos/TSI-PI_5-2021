@@ -38,7 +38,17 @@ use App\Http\Controllers\OcorrenciasController;
         Route::any('buscar-Casos',              [CasosController::class, 'buscar' ] )           ->name('buscar-Casos');
 
         // Ocorrencias
-        Route::get('ocorrencias-index/{caso}',         [OcorrenciasController::class, 'index' ] ) ->name('casos-index');
+        Route::get('ocorrencias-index/{caso}',                  [OcorrenciasController::class, 'index' ] )      ->name('Ocorrencias.index');
+        Route::get('Ocorrencias-create/{caso}',                 [OcorrenciasController::class, 'create' ] )     ->name('Ocorrencias.create');
+        Route::get('Ocorrencias-store/{caso}/{ocorrencia}',     [OcorrenciasController::class, 'store' ] )      ->name('Ocorrencias.store');
+        Route::get('ocorrencias-show/{caso}/{ocorrencia}',      [OcorrenciasController::class, 'show' ] )       ->name('Ocorrencias.show');
+        Route::get('ocorrencias-edit/{caso}/{ocorrencia}',      [OcorrenciasController::class, 'edit' ] )       ->name('Ocorrencias.edit');
+        Route::get('ocorrencias-update/{caso}/{ocorrencia}',    [OcorrenciasController::class, 'update' ] )     ->name('Ocorrencias.update');
+        Route::get('ocorrencias-destroy/{caso}/{ocorrencia}',   [OcorrenciasController::class, 'destroy' ] )    ->name('Ocorrencias.destroy');
+
+        Route::get('trashed-Ocorrencias/{caso}',                [OcorrenciasController::class, 'trashed' ] )    ->name('trashed-Ocorrencias.index');
+        Route::put('restore-Ocorrencias/{caso}/{ocorrencia}',   [OcorrenciasController::class, 'restore' ] )    ->name('restore-Ocorrencias.update');
+        Route::any('buscar-Ocorrencias/{caso}',                 [OcorrenciasController::class, 'buscar' ] )     ->name('buscar-Ocorrencias');
 
         // Relatório
 

@@ -10,5 +10,18 @@ class Ocorrencia extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable =['tipo','data', 'resumo', 'importancia'];
+    protected $fillable = [
+            'tipo'
+            ,'data'
+            ,'importancia'
+            ,'especialidade_id'
+            ,'resumo'
+            ,'user_id'
+            ,'caso_id'
+            ,'medico'
+            ,'crm'
+            ,'receitas'
+            ,'local'
+            ,'desc'
+        ];
 }
