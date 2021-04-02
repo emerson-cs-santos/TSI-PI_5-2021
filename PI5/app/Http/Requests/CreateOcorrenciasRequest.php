@@ -6,25 +6,19 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CreateOcorrenciasRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
-            //
+            'especialidade_id' => 'required'
+            ,'tipo'             => 'required'
+            ,'data'             => 'required'
+            ,'importancia'      => 'required'
+            ,'resumo'           => 'required|min:10'
         ];
     }
 }

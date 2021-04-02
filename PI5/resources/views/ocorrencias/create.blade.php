@@ -18,7 +18,7 @@
                     <div class="card">
                         <div class="card-header">Incluir Nova Ocorrência</div>
                         <div class="card-body">
-                            <form accept-charset="utf-8" action="{{route('Casos.store', $casoId )}}"  method="post" enctype="multipart/form-data">
+                            <form accept-charset="utf-8" action="{{route('Ocorrencias.store', $casoId )}}"  method="post" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="box box-primary">
@@ -64,6 +64,19 @@
                                                         </select>
                                                     </div>
 
+                                                    <div class="form-group">
+                                                        <label for="importancia">Relevância*</label>
+                                                        <select name="importancia" class="form-control" id="importancia" >
+                                                            <option value="Importante"  @if( old('importancia') == 'Importante')    selected @endif >Importante</option>
+                                                            <option value="Rotina"      @if( old('importancia') == 'Rotina')        selected @endif >Rotina</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="resumo">Resumo*</label>
+                                                        <textarea name="resumo" class='form-control' id="resumo" required rows=4 placeholder="Digite um resumo do que ocorreu">{{old('resumo')}}</textarea>
+                                                    </div>
+
                                                 </div>
                                             </div>
 
@@ -73,8 +86,28 @@
                                                 <div class="col-md-12">
 
                                                     <div class="form-group">
+                                                        <label for="local">Local</label>
+                                                        <textarea name="local" class='form-control' id="local" rows=2 placeholder="Digite o local que ocorreu (clínica, hospital)">{{old('local')}}</textarea>
+                                                    </div>
+
+                                                    <div class="form-group">
                                                         <label for="medico">Médico</label>
                                                         <textarea name="medico" class='form-control' id="medico" rows=2 placeholder="Digite o nome do médico ou profissional">{{old('medico')}}</textarea>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="crm">CRM</label>
+                                                        <textarea name="crm" class='form-control' id="crm" rows=1 placeholder="Digite o crm do médico/profissional">{{old('crm')}}</textarea>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="receitas">Receitas</label>
+                                                        <textarea name="receitas" class='form-control' id="receitas" rows=3 placeholder="Digite as receitas obtidas">{{old('receitas')}}</textarea>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="desc">Detalhes</label>
+                                                        <textarea name="desc" class='form-control' id="desc" rows=5 placeholder="Digite os detalhes do que ocorreu">{{old('desc')}}</textarea>
                                                     </div>
 
                                                 </div>

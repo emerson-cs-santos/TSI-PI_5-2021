@@ -14,7 +14,7 @@ class CreateCasosTable extends Migration
             $table->integer('user_id')->references('id')->on('users');
             $table->text('nome');
             $table->text('desc');
-            $table->string('status')->default('I');
+            $table->string('status');
             $table->text('medicamentos');
             $table->timestamps();
         });

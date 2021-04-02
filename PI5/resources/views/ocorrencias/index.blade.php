@@ -44,6 +44,35 @@
                                                 </div>
                                             </div>
                                         </form>
+
+                                        <form action="/buscar-Ocorrencias-data/{{$casoId}}" method="POST" role="search">
+                                            {{ csrf_field() }}
+
+                                            <div class="col-12 d-flex justify-content-center mt-3">
+                                                <div class="row">
+
+                                                    <div class="form-group col-sm-12 col-md-5">
+                                                        <label for="dataInicial">Data da ocorrência Inicial</label>
+                                                        <input type="date" name="dataInicial" id="dataInicial" placeholder="Data da ocorrência" class="form-control"
+                                                            @if( isset($buscarDataInicial) )  value="{{$buscarDataInicial}}"  @endif >
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 col-md-5">
+                                                        <label for="dataFinal">Data da ocorrência Final</label>
+                                                        <input type="date" name="dataFinal" id="dataFinal" placeholder="Data da ocorrência" class="form-control"
+                                                            @if( isset($buscarDataFinal) )  value="{{$buscarDataFinal}}"  @endif >
+                                                    </div>
+
+                                                    <div class="col-sm-12 col-md-2">
+                                                        <button type="submit" class="btn btn-secondary" data-placement="top" data-toggle="tooltip" title="Fazer busca">
+                                                            <span class="fa fa-search"></span>
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </form>
                                     @endif
 
                                     {{-- Tabela inicio --}}
@@ -62,43 +91,57 @@
                                             </thead>
                                             <tbody>
                                                 @foreach($ocorrencias as $ocorrencia)
-                                                <tr>
-                                                    <td>{{$ocorrencia->tipo}}</td>
-                                                    <td>{{$ocorrencia->data}}</td>
-                                                    <td>{{$ocorrencia->importancia}}</td>
-                                                    <td>{{$ocorrencia->especialidade}}</td>
 
-                                                    @if(!$caso->trashed())
+                                                    @if ( $ocorrencia->caso_id == $casoId and $ocorrencia->user_id == Auth::user()->id)
 
-                                                        <td>
-                                                            <a href="{{ route('Ocorrencias.show', $casoId, $ocorrencia->id) }}" class="btn btn-xs btn-primary"><i class="fas fa-eye"></i> Visualizar</a>
-                                                        </td>
+                                                        <tr>
+                                                            <td>{{$ocorrencia->tipo}}</td>
 
-                                                        <td>
-                                                            <a href="{{ route('Ocorrencias.edit', $casoId, $ocorrencia->id) }}" class="btn btn-xs btn-warning"> <i class="fas fa-edit"></i> Editar</a>
-                                                        </td>
+                                                            @php
+                                                                $date = DateTime::createFromFormat('Y-m-d H:i:s', $ocorrencia->data );
+                                                                $DataOcorrencia = $date->format('d/m/Y');
+                                                            @endphp
+                                                            <td>{{ $DataOcorrencia}}</td>
 
-                                                        @else
-                                                        <td>
-                                                            <form action="{{ route('restore-Ocorrencias.update', $casoId, $ocorrencia->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                <button type="button" onclick="confirmar('Reativar registro','Você tem certeza?', this.form)" class="btn btn-primary btn-xs float-center ml-1">Reativar</button>
-                                                            </form>
-                                                        </td>
+                                                            <td>{{$ocorrencia->importancia}}</td>
+                                                            <td>{{$ocorrencia->especialidade}}</td>
+
+                                                            @if(!$ocorrencia->trashed())
+
+                                                                <td>
+                                                                    <a href="{{ route( 'Ocorrencias.show', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id] ) }}" class="btn btn-xs btn-primary"><i class="fas fa-eye"></i> Visualizar</a>
+                                                                </td>
+
+
+
+                                                                <td>
+                                                                    <a href="{{ route('Ocorrencias.edit', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id] ) }}" class="btn btn-xs btn-warning"> <i class="fas fa-edit"></i> Editar</a>
+                                                                </td>
+
+                                                                @else
+                                                                <td>
+                                                                    <form action="{{ route('restore-Ocorrencias.update', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id]) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <button type="button" onclick="confirmar('Reativar registro','Você tem certeza?', this.form)" class="btn btn-primary btn-xs float-center ml-1">Reativar</button>
+                                                                    </form>
+                                                                </td>
+                                                            @endif
+
+                                                            <td>
+                                                                <form action="{{ route('Ocorrencias.destroy', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id] ) }}" class="d-inline" method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    @php
+                                                                        $acaoDeletar = $ocorrencia->trashed() ? 'Apagar' : 'Mover para Lixeira';
+                                                                    @endphp
+                                                                    <button type="button" onclick="confirmar('{{ $acaoDeletar }}','Você tem certeza?', this.form)" class="btn btn-danger btn-xs float-center"> <i class="fas fa-trash-alt"></i> {{ $acaoDeletar}} </button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+
                                                     @endif
 
-                                                    <td>
-                                                        <form action="{{ route('Ocorrencias.destroy', $casoId, $ocorrencia->id) }}" class="d-inline" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            @php
-                                                                $acaoDeletar = $caso->trashed() ? 'Apagar' : 'Mover para Lixeira';
-                                                            @endphp
-                                                            <button type="button" onclick="confirmar('{{ $acaoDeletar }}','Você tem certeza?', this.form)" class="btn btn-danger btn-xs float-center"> <i class="fas fa-trash-alt"></i> {{ $acaoDeletar}} </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
