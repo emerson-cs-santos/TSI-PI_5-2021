@@ -26,7 +26,7 @@
                                 <div class="col-12 mt-3 d-flex justify-content-center mb-3">
                                     @if ( Auth::user()->premium == 'sim' )
                                         <div class="form-group">
-                                            <span class="h4"> Parabens! você já é usuário Premium! </span>
+                                            <span class="h4 text-success"> Parabens! você já é usuário Premium! </span>
                                         </div>
                                     @else
                                         <div class="form-group">

@@ -8,13 +8,9 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\EspecialidadesController;
 use App\Http\Controllers\CasosController;
 use App\Http\Controllers\OcorrenciasController;
-
-
-// teste
-//Route::get('/teste', [MainController::class, 'teste']) ->name('teste');
+use App\Http\Controllers\RelatorioController;
 
 // Não precisa de login
-
     // Index
     Route::get('/',             [MainController::class, 'index']) ->name('index');
     Route::get('/dashboard',    [MainController::class, 'index']) ->name('dashboard');
@@ -52,6 +48,9 @@ use App\Http\Controllers\OcorrenciasController;
         Route::any('buscar-Ocorrencias-data/{caso}',            [OcorrenciasController::class, 'buscarData' ] ) ->name('buscar-Ocorrencias.data');
 
         // Relatório
+        Route::get('relatorio',             [RelatorioController::class, 'relatorio'])          ->name('relatorio');
+        Route::get('relatorio-impressao',   [RelatorioController::class, 'relatorioImpressao']) ->name('relatorio.impressao');
+        Route::any('buscar-relatorio',      [RelatorioController::class, 'relatorioBuscar' ] )  ->name('buscar-relatorio');
 
         // Premium
         Route::get('premium',       [MainController::class, 'premium'])         ->name('premium');

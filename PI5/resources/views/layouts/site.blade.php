@@ -55,7 +55,7 @@
                         </li>
 
                         <li>
-                            <a href="tables.html"><i class="fas fa-file-alt"></i> Relatórios</a>
+                            <a href="{{route('relatorio')}}"><i class="fas fa-file-alt"></i> Relatórios</a>
                         </li>
 
                         <li>
