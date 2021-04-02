@@ -59,7 +59,7 @@
                         </li>
 
                         <li>
-                            <a href="charts.html"><i class="fas fa-file-invoice-dollar"></i> Premium</a>
+                            <a href="{{route('premium')}}"><i class="fas fa-file-invoice-dollar"></i> Premium</a>
                         </li>
 
                         @if ( !empty(Auth::user()->name) )

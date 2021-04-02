@@ -16,8 +16,8 @@ use App\Http\Controllers\OcorrenciasController;
 // Não precisa de login
 
     // Index
-    Route::get('/', [MainController::class, 'index']) ->name('index');
-    Route::get('/dashboard', [MainController::class, 'index']) ->name('dashboard');
+    Route::get('/',             [MainController::class, 'index']) ->name('index');
+    Route::get('/dashboard',    [MainController::class, 'index']) ->name('dashboard');
 
     // Sobre
         // usar MainController
@@ -38,13 +38,13 @@ use App\Http\Controllers\OcorrenciasController;
         Route::any('buscar-Casos',              [CasosController::class, 'buscar' ] )           ->name('buscar-Casos');
 
         // Ocorrencias
-        Route::get('ocorrencias-index/{caso}',                  [OcorrenciasController::class, 'index' ] )      ->name('Ocorrencias.index');
-        Route::get('Ocorrencias-create/{caso}',                 [OcorrenciasController::class, 'create' ] )     ->name('Ocorrencias.create');
-        Route::post('Ocorrencias-store/{caso}',                  [OcorrenciasController::class, 'store' ] )      ->name('Ocorrencias.store');
-        Route::get('ocorrencias-show/{caso}/{ocorrencia}',      [OcorrenciasController::class, 'show' ] )       ->name('Ocorrencias.show');
-        Route::get('ocorrencias-edit/{caso}/{ocorrencia}',      [OcorrenciasController::class, 'edit' ] )       ->name('Ocorrencias.edit');
-        Route::put('ocorrencias-update/{caso}/{ocorrencia}',    [OcorrenciasController::class, 'update' ] )     ->name('Ocorrencias.update');
-        Route::delete('ocorrencias-destroy/{caso}/{ocorrencia}',   [OcorrenciasController::class, 'destroy' ] )    ->name('Ocorrencias.destroy');
+        Route::get('ocorrencias-index/{caso}',                      [OcorrenciasController::class, 'index' ] )      ->name('Ocorrencias.index');
+        Route::get('Ocorrencias-create/{caso}',                     [OcorrenciasController::class, 'create' ] )     ->name('Ocorrencias.create');
+        Route::post('Ocorrencias-store/{caso}',                     [OcorrenciasController::class, 'store' ] )      ->name('Ocorrencias.store');
+        Route::get('ocorrencias-show/{caso}/{ocorrencia}',          [OcorrenciasController::class, 'show' ] )       ->name('Ocorrencias.show');
+        Route::get('ocorrencias-edit/{caso}/{ocorrencia}',          [OcorrenciasController::class, 'edit' ] )       ->name('Ocorrencias.edit');
+        Route::put('ocorrencias-update/{caso}/{ocorrencia}',        [OcorrenciasController::class, 'update' ] )     ->name('Ocorrencias.update');
+        Route::delete('ocorrencias-destroy/{caso}/{ocorrencia}',    [OcorrenciasController::class, 'destroy' ] )    ->name('Ocorrencias.destroy');
 
         Route::get('trashed-Ocorrencias/{caso}',                [OcorrenciasController::class, 'trashed' ] )    ->name('trashed-Ocorrencias.index');
         Route::put('restore-Ocorrencias/{caso}/{ocorrencia}',   [OcorrenciasController::class, 'restore' ] )    ->name('restore-Ocorrencias.update');
@@ -54,7 +54,8 @@ use App\Http\Controllers\OcorrenciasController;
         // Relatório
 
         // Premium
-            // usar MainController
+        Route::get('premium',       [MainController::class, 'premium'])         ->name('premium');
+        Route::put('premium-mudar', [MainController::class, 'premiumMudar'])    ->name('premium.mudar');
     });
 
 

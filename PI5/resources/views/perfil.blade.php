@@ -8,6 +8,13 @@
                 <div class="col-md-12 page-header">
                     <div class="page-pretitle">Perfil</div>
                     <h2 class="page-title text-center">Informações de cadastro</h2>
+
+                    @if ( Auth::user()->premium == 'sim' )
+                        <span class="h5 text-success">Usuário Premium</span>
+                    @else
+                        <span class="h5 text-info">Usuário Regular</span>
+                    @endif
+
                 </div>
             </div>
 
