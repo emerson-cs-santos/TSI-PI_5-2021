@@ -28,3 +28,26 @@ function enviarForm(form)
 {
     form.submit();
 }
+
+function apaga_filtros()
+{
+    if ( document.getElementById("tipo").value !== 'completo' )
+    {
+        document.getElementById("busca").value = '';
+        document.getElementById("dataInicial").value = '';
+        document.getElementById("dataFinal").value = '';
+    }
+}
+
+function seta_completo_data()
+{
+    document.getElementById("busca").value = '';
+    document.getElementById("tipo").value = 'completo';
+}
+
+function seta_completo_busca()
+{
+    document.getElementById("dataInicial").value = '';
+    document.getElementById("dataFinal").value = '';
+    document.getElementById("tipo").value = 'completo';
+}

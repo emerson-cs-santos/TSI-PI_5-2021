@@ -271,10 +271,11 @@ class OcorrenciasController extends Controller
                 ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
                 ->whereDate('ocorrencias.data','<=', $buscarDataFinal)
                 ->orderByDesc('data')
-                ->paginate(15)
+                ->paginate(30)
                 ->setPath ( '' );
 
-                $pagination = $ocorrencias->appends ( array ('buscarDataInicial' => $request->input('buscarDataInicial') . $request->input('buscarDataFinal')  ) );
+                $pagination = $ocorrencias->appends ( array ('buscarDataInicial' => $request->input('buscarDataInicial')  ) );
+                $pagination = $ocorrencias->appends ( array ('buscarDataFinal' => $request->input('buscarDataFinal')  ) );
 
                 return view('ocorrencias.index')
                 ->with('ocorrencias',$ocorrencias )->withQuery ( $buscarDataInicial )
@@ -292,7 +293,7 @@ class OcorrenciasController extends Controller
                 ->where('caso_id', '=', $casoId )
                 ->whereDate('ocorrencias.data','<=', $buscarDataFinal)
                 ->orderByDesc('data')
-                ->paginate(15)
+                ->paginate(30)
                 ->setPath ( '' );
 
                 $pagination = $ocorrencias->appends ( array ('buscarDataFinal' => $request->input('buscarDataFinal')  ) );
@@ -313,7 +314,7 @@ class OcorrenciasController extends Controller
                 ->where('caso_id', '=', $casoId )
                 ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
                 ->orderByDesc('data')
-                ->paginate(15)
+                ->paginate(30)
                 ->setPath ( '' );
 
                 $pagination = $ocorrencias->appends ( array ('buscarDataInicial' => $request->input('buscarDataInicial')  ) );
@@ -334,7 +335,7 @@ class OcorrenciasController extends Controller
             ->where('user_id', '=', Auth::user()->id )
             ->where('caso_id', '=', $casoId )
             ->orderByDesc('data')
-            ->paginate(15)
+            ->paginate(30)
             ->setPath ( '' );
 
             return view('ocorrencias.index')

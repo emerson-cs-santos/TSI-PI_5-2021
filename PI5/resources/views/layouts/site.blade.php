@@ -82,7 +82,7 @@
                         @endif
 
                         <li>
-                            <a href="icons.html"><i class="fas fa-info-circle"></i> Sobre</a>
+                            <a href="{{route('sobre')}}"><i class="fas fa-info-circle"></i> Sobre</a>
                         </li>
 
                     </ul>

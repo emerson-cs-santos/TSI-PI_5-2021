@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\Caso;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -10,7 +11,21 @@ class MainController extends Controller
 {
     public function index()
     {
-        return view('index');
+        $user = User::selectRaw('users.*')->get();
+        $userCount = $user->count();
+
+        $caso = Caso::selectRaw('casos.*')->where('status', '=', 'Curado')->get();
+        $casoCount = $caso->count();
+
+        $premium = User::selectRaw('users.*')->where('premium', '=', 'Sim')->get();
+        $premiumCount = $premium->count();
+
+        return view('index')->with('userCount',$userCount)->with('casoCount',$casoCount)->with('premiumCount',$premiumCount);
+    }
+
+    public function sobre()
+    {
+        return view('sobre');
     }
 
     public function premium()

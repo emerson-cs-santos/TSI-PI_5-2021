@@ -84,7 +84,7 @@
                                 <div class="col-sm-8">
                                     <div class="detail text-center">
                                         <p class="detail-subtitle">Usuários</p>
-                                        <span class="number">6.267</span>
+                                        <span class="number">{{$userCount}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                                 <div class="col-sm-8">
                                     <div class="detail text-center">
                                         <p class="detail-subtitle">Casos resolvidos</p>
-                                        <span class="number">28.210</span>
+                                        <span class="number">{{$casoCount}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +136,7 @@
                                 <div class="col-sm-8">
                                     <div class="detail text-center">
                                         <p class="detail-subtitle">Assinantes</p>
-                                        <span class="number">4.250</span>
+                                        <span class="number">{{$premiumCount}}</span>
                                     </div>
                                 </div>
                             </div>

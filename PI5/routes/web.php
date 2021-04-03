@@ -16,7 +16,7 @@ use App\Http\Controllers\RelatorioController;
     Route::get('/dashboard',    [MainController::class, 'index']) ->name('dashboard');
 
     // Sobre
-        // usar MainController
+    Route::get('/sobre',             [MainController::class, 'sobre']) ->name('sobre');
 
 // Precisa de login
     Route::middleware(['auth:sanctum', 'verified'])->group(function()
@@ -49,7 +49,7 @@ use App\Http\Controllers\RelatorioController;
 
         // Relatório
         Route::get('relatorio',             [RelatorioController::class, 'relatorio'])          ->name('relatorio');
-        Route::get('relatorio-impressao',   [RelatorioController::class, 'relatorioImpressao']) ->name('relatorio.impressao');
+        Route::any('relatorio-impressao',   [RelatorioController::class, 'relatorioImpressao']) ->name('relatorio.impressao');
         Route::any('buscar-relatorio',      [RelatorioController::class, 'relatorioBuscar' ] )  ->name('buscar-relatorio');
 
         // Premium
