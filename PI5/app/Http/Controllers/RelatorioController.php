@@ -13,7 +13,7 @@ class RelatorioController extends Controller
 {
     public function relatorio()
     {
-        $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc')
+        $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos')
         ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
         ->join('casos', 'casos.id', 'ocorrencias.caso_id')
         ->where('ocorrencias.user_id', '=', Auth::user()->id )
