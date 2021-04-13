@@ -48,6 +48,12 @@
             @endif
 
             <div class="flex items-center justify-end mt-4">
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('termos') }}" target="_blank">
+                    {{ __('Ao clicar em "Registrar" você concorda com os Termos de Uso e Política de Privacidade, clique aqui para visualizar.') }}
+                </a>
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                     {{ __('Já tem cadastro?') }}
                 </a>

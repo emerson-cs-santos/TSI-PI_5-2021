@@ -23,6 +23,11 @@ class MainController extends Controller
         return view('index')->with('userCount',$userCount)->with('casoCount',$casoCount)->with('premiumCount',$premiumCount);
     }
 
+    public function termos()
+    {
+        return view('termos');
+    }
+
     public function sobre()
     {
         return view('sobre');

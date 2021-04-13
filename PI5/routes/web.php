@@ -18,6 +18,9 @@ use App\Http\Controllers\RelatorioController;
     // Sobre
     Route::get('/sobre',             [MainController::class, 'sobre']) ->name('sobre');
 
+    // Termos de uso e Politica de privacidade
+    Route::get('/termos',             [MainController::class, 'termos']) ->name('termos');
+
 // Precisa de login
     Route::middleware(['auth:sanctum', 'verified'])->group(function()
     {
