@@ -113,7 +113,7 @@ class OcorrenciasController extends Controller
        if (  $dataNova > date('d/m/Y') )
        {
             session()->flash('error', "Data informada: $dataNova é maior que a data de hoje: " . date('d/m/Y'));
-            return redirect()->back();
+           // return redirect()->back();
        }
 
         $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->firstOrFail();

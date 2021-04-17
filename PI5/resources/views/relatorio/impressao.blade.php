@@ -31,7 +31,7 @@
                                     </div>
 
                                     {{-- Dados Pessoais inicio --}}
-                                    <div class="mt-3 row text-center">
+                                    <div class="mt-3 row text-center border border-dark rounded">
 
                                         <div class="col-12 col-sm-6 col-md-3">
                                             <span class="h5">Paciente: {{Auth::user()->name}} </span>
@@ -67,7 +67,7 @@
 
                                         @if ( $registro->caso_id != $casoAtual )
 
-                                            <div class="mt-5">
+                                            <div class="mt-1 mb-5">
 
                                             </div>
 
@@ -75,52 +75,118 @@
                                                 $casoAtual = $registro->caso_id
                                             @endphp
 
-                                            <div class="col-12">
-                                                <span class="h3"> Caso: {{$registro->caso}} </span>
-                                            </div>
+                                            <div class="border border-info rounded ">
+                                                <div class="col-12">
+                                                    <span class="h3"> <strong>Caso:</strong> {{$registro->caso}} </span>
+                                                </div>
 
-                                            <div class="col-12">
-                                                <span class="h5"> Descrição: {{$registro->casoDesc}} </span>
-                                            </div>
+                                                <div class="col-12 mt-2 text">
+                                                    <span class="h5"> <strong>Descrição:</strong> {{$registro->casoDesc}} </span>
+                                                </div>
 
-                                            <div class="col-12">
-                                                <span class="h5"> Status: {{$registro->status}} </span>
-                                            </div>
+                                                @php
+                                                    $corStatus = "text-dark";
 
-                                            <div class="col-12">
-                                                <span class="h5"> Medicamentos: {{$registro->medicamentos}} </span>
+                                                    if( $registro->status == 'Em investigação' )
+                                                    {
+                                                        $corStatus = "text-danger";
+                                                    }
+
+                                                    if( $registro->status == 'Doença warning' )
+                                                    {
+                                                        $corStatus = "text-success";
+                                                    }
+
+                                                    if( $registro->status == 'Curado' )
+                                                    {
+                                                        $corStatus = "text-success";
+                                                    }
+                                                @endphp
+
+                                                <div class="col-12 mt-2">
+                                                    <span class="h5"> <strong>Status:</strong> <span class="{{$corStatus}} font-weight-bold" > {{$registro->status}} </span>   </span>
+                                                </div>
+
+                                                <div class="col-12 mt-2">
+                                                    <span class="h5"> <strong>Medicamentos:</strong> {{$registro->medicamentos}} </span>
+                                                </div>
                                             </div>
 
                                             <div class="col-12 mt-3">
-                                                <span class="h4"> Ocorrencias:</span>
+                                                <span class="h4 font-weight-bold"> Ocorrencias: </span>
                                             </div>
                                         @endif
 
                                         {{-- Ocorrencias do Caso inicio --}}
 
+                                        <div class="border border-dark rounded mb-3">
+
+                                            @php
+                                                $corTipo = "text-dark";
+
+                                                if( $registro->tipo == 'Consulta' )
+                                                {
+                                                    $corTipo = "text-secondary";
+                                                }
+
+                                                if( $registro->tipo == 'Exame' )
+                                                {
+                                                    $corTipo = "text-info";
+                                                }
+
+                                                if( $registro->tipo == 'Pronto socorro' )
+                                                {
+                                                    $corTipo = "text-danger";
+                                                }
+
+                                                if( $registro->tipo == 'Cirurgia' )
+                                                {
+                                                    $corTipo = "text-warning";
+                                                }
+                                            @endphp
+
                                             <div class="col-12 mt-3">
-                                                <span class="h5"> Tipo: {{$registro->tipo}} </span>
+                                                <span class="h5"> <strong> Tipo:</strong> <span class="{{$corTipo}} font-weight-bold">{{$registro->tipo}}</span> </span>
+                                            </div>
+
+                                            @php
+                                                $corImportancia = "text-dark";
+
+                                                if( $registro->importancia == 'Importante' )
+                                                {
+                                                    $corImportancia = "text-warning";
+                                                }
+
+                                                if( $registro->importancia == 'Rotina' )
+                                                {
+                                                    $corImportancia = "text-primary";
+                                                }
+                                            @endphp
+
+                                            <div class="col-12 mt-3">
+                                                <span class="h5"> <strong> Relevância:</strong> <span class="{{$corImportancia}} font-weight-bold"> {{$registro->importancia}} </span> </span>
                                             </div>
 
                                             @php
                                                 $date = DateTime::createFromFormat('Y-m-d H:i:s', $registro->data );
                                                 $DataOcorrencia = $date->format('d/m/Y');
                                             @endphp
-                                            <div class="col-12">
-                                                <span class="h5"> Data: {{$DataOcorrencia}} </span>
+                                            <div class="col-12 mt-2">
+                                                <span class="h5"> <strong> Data:</strong>  {{$DataOcorrencia}} </span>
                                             </div>
 
-                                            <div class="col-12">
-                                                <span class="h5"> Especialidade: {{$registro->especialidade}} </span>
+                                            <div class="col-12 mt-2">
+                                                <span class="h5"> <strong> Especialidade:</strong>  {{$registro->especialidade}} </span>
                                             </div>
 
-                                            <div class="col-12">
-                                                <span class="h5"> Receitas: {{$registro->receitas}} </span>
+                                            <div class="col-12 mt-2">
+                                                <span class="h5"> <strong> Receitas:</strong>  {{$registro->receitas}} </span>
                                             </div>
 
-                                            <div class="col-12">
-                                                <span class="h5"> Resumo: {{$registro->resumo}} </span>
+                                            <div class="col-12 mt-2">
+                                                <span class="h5"> <strong> Resumo:</strong>  {{$registro->resumo}} </span>
                                             </div>
+                                        </div>
 
                                         {{-- Ocorrencias do Caso fim --}}
 
