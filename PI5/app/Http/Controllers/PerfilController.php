@@ -11,6 +11,7 @@ use App\Models\Caso;
 use App\Models\Ocorrencia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class PerfilController extends Controller
 {
@@ -72,15 +73,31 @@ class PerfilController extends Controller
 
     public function apagarPerfil()
     {
+        $this->apagarPerfilBanco(0);
+
+        session()->flash('success', 'Usuário apagado com sucesso, é uma pena ver você ir, esperamos ter ajudado =D');
+
+        // Fazer logout
+        return redirect( route( 'index' ) );
+    }
+
+    public function apagarPerfilBanco(int $userID)
+    {
+        // Não será vazio quando chamado pelo test unit
+        if ( empty($userID) )
+        {
+            $userID = Auth::user()->id;
+        }
+
         // Apagar casos e Ocorrencias
         $casosApagar = Caso::withTrashed()
-        ->where('user_id', Auth::user()->id )
+        ->where('user_id', $userID )
         ->get();
 
         foreach ($casosApagar as $casoApagar)
         {
             $ocorrenciasApagar = Ocorrencia::withTrashed()
-            ->where('user_id', Auth::user()->id )
+            ->where('user_id', $userID )
             ->where('caso_id', $casoApagar->id )
             ->get();
 
@@ -95,12 +112,7 @@ class PerfilController extends Controller
         }
 
         // Apagar usuário
-        $usuario = User::find( Auth::user()->id );
+        $usuario = User::find( $userID );
         $usuario->forceDelete();
-
-        session()->flash('success', 'Usuário apagado com sucesso, é uma pena ver você ir, esperamos ter ajudado =D');
-
-        // Fazer logout
-        return redirect( route( 'index' ) );
     }
 }
