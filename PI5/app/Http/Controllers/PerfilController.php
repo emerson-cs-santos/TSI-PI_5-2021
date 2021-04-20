@@ -26,10 +26,13 @@ class PerfilController extends Controller
        $dataNovaSemFormatar = strtotime($request->nascimento);
        $dataNova = date('d-m-Y',$dataNovaSemFormatar);
 
-      if (  $dataNova > date('d/m/Y') )
+       // Conversão strtotime não funciona de data estiver formatada com / (exemplo d/m/Y), apenas se estiver com - (d-m-Y)
+
+      if (  strtotime($dataNova) > strtotime(date('d-m-Y')) )
       {
-           session()->flash('error', "Data informada: $dataNova é maior que a data de hoje: " . date('d/m/Y'));
-           return redirect()->back();
+        $dataNova = date('d/m/Y',$dataNovaSemFormatar);
+        session()->flash('error', "Data informada: $dataNova é maior que a data de hoje: " . date('d/m/Y'));
+        return redirect()->back();
       }
 
         $usuario = User::find( Auth::user()->id );

@@ -8,10 +8,20 @@ use App\Models\Caso;
 use App\Models\Especialidade;
 use App\Http\Requests\CreateOcorrenciasRequest;
 use App\Http\Requests\EditOcorrenciasRequest;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 
 class OcorrenciasController extends Controller
 {
+    // Proteção para não colocar data maior que a data atual
+    function validarData( String $Data): bool
+    {
+        $dataNovaSemFormatar = strtotime($Data);
+        $dataNova = date('d-m-Y',$dataNovaSemFormatar);
+
+        return strtotime($dataNova) > strtotime(date('d-m-Y'));
+    }
+
     public function index( $casoId )
     {
         $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')
@@ -33,14 +43,12 @@ class OcorrenciasController extends Controller
 
     public function store(CreateOcorrenciasRequest $request, $casoId)
     {
-       // Proteção para não colocar data maior que a data atual
-       $dataNovaSemFormatar = strtotime($request->data);
-       $dataNova = date('d-m-Y',$dataNovaSemFormatar);
-
-      if (  $dataNova > date('d/m/Y') )
+      $DataNova = $request->data;
+      if ( $this->validarData( $DataNova ) )
       {
-           session()->flash('error', "Data informada: $dataNova é maior que a data de hoje: " . date('d/m/Y'));
-           return redirect()->back();
+        $DataNova = date('d/m/Y', strtotime($DataNova)) ;
+        session()->flash('error', "Data informada: $DataNova é maior que a data de hoje: " . date('d/m/Y'));
+        return redirect()->back();
       }
 
         if ( empty($request->local) )
@@ -106,15 +114,13 @@ class OcorrenciasController extends Controller
 
     public function update( EditOcorrenciasRequest $request, $casoId, $ocorrenciaId )
     {
-       // Proteção para não colocar data maior que a data atual
-        $dataNovaSemFormatar = strtotime($request->data);
-        $dataNova = date('d-m-Y',$dataNovaSemFormatar);
-
-       if (  $dataNova > date('d/m/Y') )
-       {
-            session()->flash('error', "Data informada: $dataNova é maior que a data de hoje: " . date('d/m/Y'));
-           // return redirect()->back();
-       }
+        $DataNova = $request->data;
+        if ( $this->validarData( $DataNova ) )
+        {
+          $DataNova = date('d/m/Y', strtotime($DataNova)) ;
+          session()->flash('error', "Data informada: $DataNova é maior que a data de hoje: " . date('d/m/Y'));
+          return redirect()->back();
+        }
 
         $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->firstOrFail();
 

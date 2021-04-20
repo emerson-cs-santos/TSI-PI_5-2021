@@ -136,7 +136,7 @@
                             </div>
 
                             <div class="form-group">
-                                <a href="{{ url()->previous() }}" class='btn btn-primary'> <i class="fas fa-arrow-left"></i> Voltar</a>
+                                <a href="{{ route('Ocorrencias.index', $casoId) }}" class='btn btn-primary'> <i class="fas fa-arrow-left"></i> Voltar</a>
                             </div>
 
                         </div>

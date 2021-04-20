@@ -121,7 +121,7 @@
 
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-success"> <i class="fas fa-save"></i> Salvar</button>
-                                    <a href="{{ url()->previous() }}" class='btn btn-primary'> <i class="fas fa-arrow-left"></i> Voltar</a>
+                                    <a href="{{ route('Ocorrencias.index', $casoId) }}" class='btn btn-primary'> <i class="fas fa-arrow-left"></i> Voltar</a>
                                 </div>
                             </form>
                         </div>
