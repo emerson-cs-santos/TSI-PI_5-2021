@@ -4,14 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Controllers\PerfilController;
 
 class UsersController extends Controller
 {
     public function index()
     {
-        $users = User::selectRaw('users.*')->orderByDesc('id')->paginate(5);
+        $users = $this->indexBanco();
 
         return view('usuarios', ['usuarios' => $users]);
+    }
+
+    public function indexBanco()
+    {
+        $users = User::selectRaw('users.*')->orderByDesc('id')->paginate(5);
+
+        return $users;
     }
 
     public function destroy($id)
@@ -22,11 +30,21 @@ class UsersController extends Controller
             return redirect()->back();
         }
 
+        $this->destroyBanco($id);
+
+        return redirect()->back();
+    }
+
+    public function destroyBanco($id)
+    {
         $User = User::withTrashed()->where('id', $id)->firstOrFail();
 
         if($User->trashed())
         {
-            $User->forceDelete();
+           // $User->forceDelete();
+            $perfilController = new PerfilController();
+            $perfilController->apagarPerfilBanco( $id  );
+
             session()->flash('success', 'Usuário apagado com sucesso!');
         }
         else
@@ -34,24 +52,32 @@ class UsersController extends Controller
             $User->delete();
             session()->flash('success', 'Usuário movido para lixeira com sucesso!');
         }
-
-        return redirect()->back();
     }
 
 
     public function trashed()
     {
-        $users = User::selectRaw('users.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
+        $users = $this->trashedBanco();
         return view('usuarios', ['usuarios' => $users]);
     }
 
+    public function trashedBanco()
+    {
+        $users = User::selectRaw('users.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
+        return $users;
+    }
 
     public function restore($id)
     {
-        $user = User::withTrashed()->where('id', $id)->firstOrFail();
-        $user->restore();
+        $this->restoreBanco($id);
         session()->flash('success', 'Usuário ativado com sucesso!');
         return redirect()->back();
+    }
+
+    public function restoreBanco($id)
+    {
+        $user = User::withTrashed()->where('id', $id)->firstOrFail();
+        $user->restore();
     }
 
 

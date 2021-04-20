@@ -112,7 +112,8 @@ class PerfilController extends Controller
         }
 
         // Apagar usuário
-        $usuario = User::find( $userID );
+       // $usuario = User::find( $userID );
+        $usuario = User::withTrashed()->where('id', $userID)->first();
         $usuario->forceDelete();
     }
 }
