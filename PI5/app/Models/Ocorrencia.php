@@ -23,5 +23,6 @@ class Ocorrencia extends Model
             ,'receitas'
             ,'local'
             ,'desc'
+            ,'arquivo'
         ];
 }

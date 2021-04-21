@@ -6,10 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Ocorrencia;
 use App\Models\Caso;
 use App\Models\Especialidade;
+use App\Models\Arquivo;
 use App\Http\Requests\CreateOcorrenciasRequest;
 use App\Http\Requests\EditOcorrenciasRequest;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+use Illuminate\Support\Facades\File;
 
 class OcorrenciasController extends Controller
 {
@@ -43,6 +48,16 @@ class OcorrenciasController extends Controller
 
     public function store(CreateOcorrenciasRequest $request, $casoId)
     {
+      $files = $request->allFiles(); // Carrega todos os arquivos enviados
+
+      if ( !empty($files) ) // Apenas verifica/considera os arquivos se tem algum enviado
+      {
+        if ( $this->validFiles( $files['arquivo'] ) == false ) // Valida se extensão dos arquivos são aceitas
+        {
+          return redirect()->back();
+        }
+      }
+
       $DataNova = $request->data;
       if ( $this->validarData( $DataNova ) )
       {
@@ -76,7 +91,7 @@ class OcorrenciasController extends Controller
             $request->desc = ' ';
         }
 
-        Ocorrencia::create([
+        $ocorrencia = Ocorrencia::create([
             'user_id'           => Auth::user()->id
             ,'caso_id'          => $casoId
             ,'especialidade_id' => $request->especialidade_id
@@ -91,6 +106,11 @@ class OcorrenciasController extends Controller
             ,'desc'             => $request->desc
         ]);
 
+        if ( !empty($files) ) // Apenas verifica/considera os arquivos se tem algum enviado
+        {
+          $this->storeFiles( $files['arquivo'], $casoId, $ocorrencia->id ); // Upload dos arquivos
+        }
+
        session()->flash('success', 'Ocorrência criada com sucesso!');
 
         return redirect( route( 'Ocorrencias.index', $casoId ) );
@@ -100,7 +120,16 @@ class OcorrenciasController extends Controller
     {
         $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->where('user_id', '=', Auth::user()->id )->firstOrFail();
 
-        return view('ocorrencias.show')->with( ['casoId' => $casoId] )->with('ocorrencia', $ocorrencia)->with('especialidades', Especialidade::orderBy('name')->get() );
+        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        ->where('caso_id', $casoId)
+        ->where('ocorrencia_id', $ocorrenciaId)
+        ->get();
+
+        return view('ocorrencias.show')
+        ->with( ['casoId' => $casoId] )
+        ->with('ocorrencia', $ocorrencia)
+        ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('arquivos', $arquivos);
     }
 
 
@@ -108,12 +137,31 @@ class OcorrenciasController extends Controller
     {
         $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->where('user_id', '=', Auth::user()->id )->firstOrFail();
 
-        return view('ocorrencias.edit')->with( ['casoId' => $casoId] )->with('ocorrencia', $ocorrencia)->with('especialidades', Especialidade::orderBy('name')->get() );
+        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        ->where('caso_id', $casoId)
+        ->where('ocorrencia_id', $ocorrenciaId)
+        ->get();
+
+        return view('ocorrencias.edit')
+        ->with( ['casoId' => $casoId] )
+        ->with('ocorrencia', $ocorrencia)
+        ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('arquivos', $arquivos);
     }
 
 
     public function update( EditOcorrenciasRequest $request, $casoId, $ocorrenciaId )
     {
+        $files = $request->allFiles(); // Carrega todos os arquivos enviados
+
+        if ( !empty($files) ) // Apenas verifica/considera os arquivos se tem algum enviado
+        {
+          if ( $this->validFiles( $files['arquivo'] ) == false ) // Valida se extensão dos arquivos são aceitas
+          {
+            return redirect()->back();
+          }
+        }
+
         $DataNova = $request->data;
         if ( $this->validarData( $DataNova ) )
         {
@@ -163,6 +211,11 @@ class OcorrenciasController extends Controller
             ,'receitas'         => $request->receitas
             ,'desc'             => $request->desc
         ]);
+
+        if ( !empty($files) ) // Apenas verifica/considera os arquivos se tem algum enviado
+        {
+          $this->storeFiles( $files['arquivo'], $casoId, $ocorrencia->id ); // Upload dos arquivos
+        }
 
         session()->flash('success', 'Ocorrência alterada com sucesso!');
         return redirect( route( 'Ocorrencias.index', $casoId) );
@@ -351,5 +404,170 @@ class OcorrenciasController extends Controller
             ->with('buscarDataInicial','')
             ->with('buscarDataFinal','');
         }
+    }
+
+    function storeFiles( $arquivos, int $casoId, int $ocorrenciaId )
+    {
+        foreach ($arquivos as $arquivo)
+        {
+            // Nome original do arquivo
+            $FileName = $arquivo->getClientOriginalName();
+
+            // Extensão
+            $extension = $arquivo->extension();
+
+            // Definir nome único
+            $name = uniqid() . '_' . strtotime(date('d-m-Y H:i:s')) . '_' . $FileName;
+
+            // Salvar/upload arquivo no servidor
+            $arquivo->move(public_path().'/files/', $name);
+
+            // Salvar no banco
+            Arquivo::create([
+                'user_id'           => Auth::user()->id
+                ,'caso_id'          => $casoId
+                ,'ocorrencia_id'    => $ocorrenciaId
+                ,'nome'             => $name
+                ,'extensao'         => $extension
+            ]);
+        }
+    }
+
+    function validFiles( $arquivos ): bool
+    {
+        $retorno = true;
+
+        foreach ($arquivos as $arquivo)
+        {
+            $extension = $arquivo->extension();
+
+            // validar tipo,apenas aceitar pdf, doc e docx ou imagem
+            if ( $extension !== 'pdf' and $extension !== 'doc' and $extension !== 'docx' and !exif_imagetype($arquivo) )
+            {
+              session()->flash('error', "Tipo do arquivo: $extension inválido, extensões aceitas: PDF, DOC, DOCX ou imagens." );
+              $retorno = false;
+            }
+        }
+        return $retorno;
+    }
+
+    public function getfile( int $casoId, int $ocorrenciaId, string $nomeArquivo )
+    {
+        //$file=Storage::disk('public')->get('/files/' .$nomeArquivo);
+        // return ( new Response($file, 200) );
+
+        //$headers = array('Content-Type: image/jpg');
+        //  return Response()->download($file, 'teste.jpg', $headers);
+
+        // Validando se o arquivo pertence ao usuário, caso e ocorrencia
+        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        ->where('caso_id', $casoId)
+        ->where('ocorrencia_id', $ocorrenciaId)
+        ->where('nome', $nomeArquivo )
+        ->get();
+
+        $nomeArquivoBaixar = '';
+
+        foreach ( $arquivos as $arquivo )
+        {
+            $nomeArquivoBaixar = $arquivo->nome;
+        }
+
+        if ( $nomeArquivoBaixar == '' )
+        {
+            session()->flash('error', "Arquivo não encontrado!" );
+            return redirect()->back();
+        }
+        else
+        {
+
+            $file = public_path() .'/files/' . $nomeArquivoBaixar;
+            return Response()->download($file, $nomeArquivoBaixar);
+        }
+    }
+
+    public function getfileTodos( int $casoId, int $ocorrenciaId )
+    {
+        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        ->where('caso_id', $casoId)
+        ->where('ocorrencia_id', $ocorrenciaId)
+        ->get();
+
+        $validarSeTemArquivos = '';
+
+        foreach ( $arquivos as $arquivo )
+        {
+            $validarSeTemArquivos = $arquivo->nome;
+        }
+
+        if ( $validarSeTemArquivos == '' )
+        {
+            session()->flash('error', "Arquivos não encontrados!" );
+            return redirect()->back();
+        }
+        else
+        {
+            // Cria e abre arquivo zip
+            $zip        = new ZipArchive;
+            $zipFile    = public_path().'/files/'. 'arquivos' . '.zip';
+
+            if ($zip->open($zipFile, ZipArchive::CREATE) === TRUE)
+            {
+                foreach ( $arquivos as $arquivo )
+                {
+                    $caminho = public_path() .'/files/' . $arquivo->nome;
+                    $zip->addFile($caminho, $arquivo->nome);
+                }
+            }
+
+            // Fecha arquivo zip
+            $zip->close();
+
+            return Response()->download($zipFile, 'Arquivos' . '.zip');
+        }
+    }
+
+    public function deletefile( int $casoId, int $ocorrenciaId, string $nomeArquivo )
+    {
+        // Validando se o arquivo pertence ao usuário, caso e ocorrencia
+        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        ->where('caso_id', $casoId)
+        ->where('ocorrencia_id', $ocorrenciaId)
+        ->where('nome', $nomeArquivo )
+        ->get();
+
+        $nomeArquivoBaixar = '';
+
+        foreach ( $arquivos as $arquivo )
+        {
+            $nomeArquivoBaixar = $arquivo->nome;
+        }
+
+        if ( $nomeArquivoBaixar == '' )
+        {
+            session()->flash('error', "Arquivo não encontrado!" );
+            return redirect()->back();
+        }
+        else
+        {
+            // Apagar do banco
+            foreach ( $arquivos as $arquivo )
+            {
+                $arquivo->delete();
+            }
+
+            // Apagar arquivo
+            $file = public_path() .'/files/' . $nomeArquivoBaixar;
+            File::delete($file);
+
+            session()->flash('success', 'Arquivo apagado com sucesso!');
+            return redirect()->back();
+        }
+
+        // Se for usar, para apagar multiplos arquivos
+        // File::delete($file1, $file2, $file3);
+        // ou
+        // $files = array($file1, $file2);
+        // File::delete($files);
     }
 }

@@ -34,6 +34,10 @@
                                                 <a class="nav-link" id="detalhes-tab" data-toggle="tab" href="#detalhes" role="tab" aria-controls="detalhes" aria-selected="false">Detalhes</a>
                                             </li>
 
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="anexo-tab" data-toggle="tab" href="#anexo" role="tab" aria-controls="anexo" aria-selected="false">Anexar arquivos</a>
+                                            </li>
+
                                         </ul>
 
                                         <div class="tab-content" id="myTabContent">
@@ -111,6 +115,58 @@
                                                         <textarea name="desc" class='form-control' id="desc" rows=5 placeholder="Digite os detalhes do que ocorreu">{{ $ocorrencia->desc }}</textarea>
                                                     </div>
 
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="tab-pane fade" id="anexo" role="tabpanel" aria-labelledby="anexo-tab">
+
+                                                <div class="col-md-12">
+                                                    <span class="h5">Neste local é possivel arquivar exames, receitas etc, arquivos referente a ocorrência.</span>
+
+                                                    <div class="form-group mt-3">
+
+                                                        <label for="arquivo">Incluir Arquivos</label>
+                                                        <input class="form-control" type="file" name="arquivo[]" id="imagem" accept="image/*, .pdf, .doc, .docx" multiple >
+
+                                                    </div>
+
+                                                    <div class="form-group mt-1">
+                                                        <span class="font-weight-bold">Arquivos da Ocorrência</span>
+                                                        <div>
+                                                            <a href="{{ route('Ocorrencias.getfileTodos', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id ] ) }}" class="btn btn-info"> <i class="fas fa-download"></i> Baixar todos os arquivos</a>
+                                                        </div>
+
+                                                        {{-- Tabela inicio --}}
+                                                        <div class="table-responsive mt-3">
+                                                            <table class="table table-striped bg-light text-center table-bordered table-hover">
+                                                                <thead class="text-dark">
+                                                                    <tr>
+                                                                        <th>Nome</th>
+                                                                        <th>Extensão</th>
+                                                                        <th class="text-center" colspan="2" >Ações</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach($arquivos as $arquivo)
+                                                                    <tr>
+                                                                        <td>{{$arquivo->nome}}</td>
+                                                                        <td>{{$arquivo->extensao}}</td>
+
+                                                                        <td>
+                                                                            <a href="{{ route('Ocorrencias.getfile', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id,'nomearquivo'=>$arquivo->nome] ) }}" class="btn btn-xs btn-info"> <i class="fas fa-file-download"></i> Baixar</a>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <a href="{{ route('Ocorrencias.deletefile', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id,'nomearquivo'=>$arquivo->nome] ) }}" class="btn btn-xs btn-danger" onclick="return confirm('Apagar arquivo?')"> <i class="fas fa-file-excel"></i> Apagar</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        {{-- Tabela fim --}}
                                                 </div>
 
                                             </div>

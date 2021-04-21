@@ -5,6 +5,8 @@ use App\Models\Ocorrencia;
 use App\Models\Caso;
 use App\Models\Especialidade;
 use App\Models\User;
+use App\Models\Arquivo;
+use ZipArchive;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -172,4 +174,68 @@ class RelatorioController extends Controller
         return view('relatorio.impressao')->with('registros', $registros )->with('idade', $idade);
     }
 
+
+    public function getfileTodos( Request $request )
+    {
+        $campoImpressao = $request->input('campoGetFiles');
+
+        $registrosArray = json_decode($campoImpressao, true);
+
+        $registros = collect($registrosArray)->map(function ($registroArray) {
+            return (object) $registroArray;
+        });
+
+        $casosId = [];
+        $ocorrenciasId = [];
+
+        // Montando array para a select in
+        foreach ( $registros as $registro )
+        {
+            array_push( $casosId, $registro->caso_id );
+            array_push( $ocorrenciasId, $registro->id );
+        }
+
+        // Tirando id's repetidos
+        $casosId = array_unique($casosId);
+        $ocorrenciasId = array_unique($ocorrenciasId);
+
+        // Carregando arquivos
+        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        ->whereIn('caso_id', $casosId)
+        ->whereIn('ocorrencia_id', $ocorrenciasId)
+        ->get();
+
+        $validarSeTemArquivos = '';
+
+        foreach ( $arquivos as $arquivo )
+        {
+            $validarSeTemArquivos = $arquivo->nome;
+        }
+
+        if ( $validarSeTemArquivos == '' )
+        {
+            session()->flash('error', "Arquivos não encontrados!" );
+            return redirect()->back();
+        }
+        else
+        {
+            // Cria e abre arquivo zip
+            $zip        = new ZipArchive;
+            $zipFile    = public_path().'/files/'. 'arquivosRelatorio' . '.zip';
+
+            if ($zip->open($zipFile, ZipArchive::CREATE) === TRUE)
+            {
+                foreach ( $arquivos as $arquivo )
+                {
+                    $caminho = public_path() .'/files/' . $arquivo->nome;
+                    $zip->addFile($caminho, $arquivo->nome);
+                }
+            }
+
+            // Fecha arquivo zip
+            $zip->close();
+
+            return Response()->download($zipFile, 'Arquivos' . '.zip');
+        }
+    }
 }

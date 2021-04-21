@@ -77,11 +77,29 @@
 
                                             <div class="border border-info rounded ">
                                                 <div class="col-12">
-                                                    <span class="h3"> <strong>Caso:</strong> {{$registro->caso}} </span>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <span class="h3 font-weight-bold">Caso:</span>
+                                                        </div>
+
+                                                        <div class="col-md-10">
+                                                            <span class="h3" > {{$registro->caso}} </span>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <span class="h3"> <strong>Caso:</strong> {{$registro->caso}} </span> --}}
                                                 </div>
 
                                                 <div class="col-12 mt-2 text">
-                                                    <span class="h5"> <strong>Descrição:</strong> {{$registro->casoDesc}} </span>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <span class="h5 font-weight-bold">Descrição:</span>
+                                                        </div>
+
+                                                        <div class="col-md-10">
+                                                            <span class="h5" > {{$registro->casoDesc}} </span>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <span class="h5"> <strong>Descrição:</strong> {{$registro->casoDesc}} </span> --}}
                                                 </div>
 
                                                 @php
@@ -104,11 +122,29 @@
                                                 @endphp
 
                                                 <div class="col-12 mt-2">
-                                                    <span class="h5"> <strong>Status:</strong> <span class="{{$corStatus}} font-weight-bold" > {{$registro->status}} </span>   </span>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <span class="h5 font-weight-bold">Status:</span>
+                                                        </div>
+
+                                                        <div class="col-md-10">
+                                                            <span class="h5 {{$corStatus}} font-weight-bold" > {{$registro->status}} </span>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <span class="h5"> <strong>Status:</strong> <span class="{{$corStatus}} font-weight-bold" > {{$registro->status}} </span>   </span> --}}
                                                 </div>
 
                                                 <div class="col-12 mt-2">
-                                                    <span class="h5"> <strong>Medicamentos:</strong> {{$registro->medicamentos}} </span>
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <span class="h5">Medicamentos:</span>
+                                                        </div>
+
+                                                        <div class="col-md-10">
+                                                            <span class="h5" > {{$registro->medicamentos}} </span>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <span class="h5"> <strong>Medicamentos:</strong> {{$registro->medicamentos}} </span> --}}
                                                 </div>
                                             </div>
 

@@ -33,14 +33,19 @@
                                                 <a class="nav-link" id="detalhes-tab" data-toggle="tab" href="#detalhes" role="tab" aria-controls="detalhes" aria-selected="false">Detalhes</a>
                                             </li>
 
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="anexo-tab" data-toggle="tab" href="#anexo" role="tab" aria-controls="anexo" aria-selected="false">Anexar arquivos</a>
+                                            </li>
+
                                         </ul>
 
                                         <div class="tab-content" id="myTabContent">
 
                                             <div class="tab-pane fade active show" id="geral" role="tabpanel" aria-labelledby="geral-tab">
                                                 <div class="col-md-12">
+                                                    <span class="h5">Coloque aqui informações rápidas e resumidas da ocorrência.</span>
 
-                                                    <div class="form-group">
+                                                    <div class="form-group mt-3">
                                                         <label for="tipo">Tipo*</label>
                                                         <select name="tipo" class="form-control" id="tipo" >
                                                             <option value="Consulta"        @if( old('tipo') == 'Consulta')         selected @endif >Consulta</option>
@@ -84,8 +89,9 @@
                                             <div class="tab-pane fade" id="detalhes" role="tabpanel" aria-labelledby="detalhes-tab">
 
                                                 <div class="col-md-12">
+                                                    <span class="h5">Aqui pode-se inserir mais informações sobre a ocorrência, quanto mais detalhes melhor.</span>
 
-                                                    <div class="form-group">
+                                                    <div class="form-group mt-3">
                                                         <label for="local">Local</label>
                                                         <textarea name="local" class='form-control' id="local" rows=2 placeholder="Digite o local que ocorreu (clínica, hospital)">{{old('local')}}</textarea>
                                                     </div>
@@ -110,6 +116,21 @@
                                                         <textarea name="desc" class='form-control' id="desc" rows=5 placeholder="Digite os detalhes do que ocorreu">{{old('desc')}}</textarea>
                                                     </div>
 
+                                                </div>
+
+                                            </div>
+
+                                            <div class="tab-pane fade" id="anexo" role="tabpanel" aria-labelledby="anexo-tab">
+
+                                                <div class="col-md-12">
+                                                    <span class="h5">Neste local é possivel arquivar exames, receitas etc, arquivos referente a ocorrência.</span>
+
+                                                    <div class="form-group mt-3">
+
+                                                        <label for="arquivo">Incluir Arquivos</label>
+                                                        <input class="form-control" type="file" name="arquivo[]" id="imagem" accept="image/*, .pdf, .doc, .docx" multiple >
+
+                                                    </div>
                                                 </div>
 
                                             </div>

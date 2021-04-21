@@ -86,8 +86,20 @@
                                             <input type="search" name="campoImpressao" id='campoImpressao' value="{{$imprimir}}" hidden>
 
                                             <div class="col-12">
-                                                <button type="submit" class="btn btn-primary" data-placement="top" data-toggle="tooltip" title="Fazer busca">
+                                                <button type="submit" class="btn btn-primary" data-placement="top" data-toggle="tooltip" title="Fazer impressão">
                                                     <span class="fa fa-print"></span> Impressão
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                        <form action="/relatorio-file-todos" method="POST" role="search">
+                                            {{ csrf_field() }}
+
+                                            <input type="search" name="campoGetFiles" id='campoGetFiles' value="{{$imprimir}}" hidden>
+
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-info" data-placement="top" data-toggle="tooltip" title="Baixar anexos das ocorrências">
+                                                    <span class="fas fa-download"></span> Baixar arquivos
                                                 </button>
                                             </div>
                                         </form>
