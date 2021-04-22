@@ -25,4 +25,9 @@ class Ocorrencia extends Model
             ,'desc'
             ,'arquivo'
         ];
+
+    public function arquivos()
+    {
+        Return $this->hasMany(arquivo::class, 'ocorrencia_id');
+    }
 }

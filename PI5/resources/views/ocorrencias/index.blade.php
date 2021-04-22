@@ -84,6 +84,7 @@
                                                     <th>Data</th>
                                                     <th>Importância</th>
                                                     <th>Especialidade</th>
+                                                    <th>Qtd. Anexos</th>
                                                     @if( count($ocorrencias) > 0 )
                                                         <th class="text-center" @if( Request::path() == 'trashed-Ocorrencias' ) colspan="2" @else colspan="3" @endif >Ações</th>
                                                     @endif
@@ -105,6 +106,7 @@
 
                                                             <td>{{$ocorrencia->importancia}}</td>
                                                             <td>{{$ocorrencia->especialidade}}</td>
+                                                            <td>{{$ocorrencia->arquivos()->count()}}</td>
 
                                                             @if(!$ocorrencia->trashed())
 
