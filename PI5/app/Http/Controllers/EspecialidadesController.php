@@ -10,12 +10,17 @@ use App\Http\Requests\EditEspecialidadesRequest;
 
 class EspecialidadesController extends Controller
 {
-
     public function index()
     {
-        $especialidades = Especialidade::selectRaw('especialidades.*')->orderByDesc('id')->paginate(5);
+        $especialidades = $this->indexBanco();
 
         return view('especialidades.index', ['especialidades' => $especialidades]);
+    }
+
+    public function indexBanco()
+    {
+        $especialidades = Especialidade::selectRaw('especialidades.*')->orderByDesc('id')->paginate(5);
+        return $especialidades;
     }
 
 
