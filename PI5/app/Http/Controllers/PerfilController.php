@@ -76,9 +76,18 @@ class PerfilController extends Controller
 
     public function apagarPerfil()
     {
+        $details = [
+            'title' => 'Email de Controle sua Saúde!',
+            'body' => 'Perfil e dados do seu usuário foram excluídos conforme seu pedido.'
+        ];
+
+        $usuario = User::find( Auth::user()->id );
+
+        \Mail::to( $usuario->email )->send(new \App\Mail\ExcluiuPerfilMail($details));
+
         $this->apagarPerfilBanco(0);
 
-        session()->flash('success', 'Usuário apagado com sucesso, é uma pena ver você ir, esperamos ter ajudado =D');
+        session()->flash('success', 'Usuário apagado com sucesso, foi enviado um e-mail para você confirmando essa ação. É uma pena ver você ir, esperamos ter ajudado =D');
 
         // Fazer logout
         return redirect( route( 'index' ) );

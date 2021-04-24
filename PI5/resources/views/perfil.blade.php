@@ -105,7 +105,7 @@
                                 @method('DELETE')
 
                                 <div class="form-group">
-                                    <button type="button" onclick="confirmar('Apagar conta','Você tem certeza?', this.form)" class="btn btn-danger"> <i class="fas fa-exclamation-triangle"></i> Apagar Conta</button>
+                                    <button type="button" onclick="confirmar('Apagar conta','Você tem certeza? Sua conta e suas informações serão apagadas, para ter acesso ao site novamente, será preciso criar outra conta.', this.form)" class="btn btn-danger"> <i class="fas fa-exclamation-triangle"></i> Apagar Conta</button>
                                 </div>
                             </form>
                         </div>
