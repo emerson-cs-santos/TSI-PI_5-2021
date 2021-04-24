@@ -49,6 +49,7 @@
                                                     <th>Nome</th>
                                                     <th>E-mail</th>
                                                     <th>Nível</th>
+                                                    <th>Qtd. Casos</th>
                                                     @if( count($usuarios) > 0 )
                                                         <th class="text-center" @if( Request::path() == 'trashed-Users' ) colspan="2" @else colspan="3" @endif  >Ações</th>
                                                     @endif
@@ -60,7 +61,8 @@
                                                     <td>{{$usuario->id}}</td>
                                                     <td>{{$usuario->name}}</td>
                                                     <td>{{$usuario->email}}</td>
-                                                    <td>{{ $usuario->type == 'admin' ? ' Administrador' : 'Padrão' }}</td>
+                                                    <td>{{$usuario->type == 'admin' ? ' Administrador' : 'Padrão' }}</td>
+                                                    <td>{{$usuario->casos()->count()}}</td>
 
                                                     @if(!$usuario->trashed())
 

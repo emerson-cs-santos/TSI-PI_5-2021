@@ -49,4 +49,9 @@ class User extends Authenticatable
     {
         return $this->type === self::ADMIN_TYPE;
     }
+
+    public function casos()
+    {
+        Return $this->hasMany(Caso::class, 'user_id');
+    }
 }
