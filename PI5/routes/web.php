@@ -59,6 +59,7 @@ use App\Http\Controllers\RelatorioController;
         Route::any('relatorio-impressao',   [RelatorioController::class, 'relatorioImpressao']) ->name('relatorio.impressao');
         Route::any('buscar-relatorio',      [RelatorioController::class, 'relatorioBuscar' ] )  ->name('buscar-relatorio');
         Route::any('relatorio-file-todos',  [RelatorioController::class, 'getfileTodos' ] )     ->name('relatorio.getfileTodos');
+        Route::post('relatorio-email',       [RelatorioController::class, 'impressaoEmail' ] )   ->name('relatorio.email');
 
         // Premium
         Route::get('premium',       [MainController::class, 'premium'])         ->name('premium');

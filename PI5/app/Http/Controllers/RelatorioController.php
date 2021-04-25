@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
+use PDF;
+use Mail;
+
 class RelatorioController extends Controller
 {
     public function relatorio()
@@ -151,25 +154,10 @@ class RelatorioController extends Controller
 
     public function relatorioImpressao( Request $request )
     {
-        $campoImpressao = $request->input('campoImpressao');
+        $registrosJson = $request->input('campoImpressao');
 
-        $registrosArray = json_decode($campoImpressao, true);
-
-        $registros = collect($registrosArray)->map(function ($registroArray) {
-            return (object) $registroArray;
-        });
-
-        // Calcular idade
-        $idadeUser = User::selectRaw('YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(nascimento))) AS idade')
-        ->where('id', '=', Auth::user()->id )
-        ->get();
-
-        $idade = '';
-
-        foreach ($idadeUser as $item)
-        {
-            $idade = $item->idade;
-        }
+        $registros  = $this->converterJasonParaObjetoBancoLaravel( $registrosJson );
+        $idade      = $this->calcularIdadeUsuarioConectadoAuth();
 
         return view('relatorio.impressao')->with('registros', $registros )->with('idade', $idade);
     }
@@ -237,5 +225,78 @@ class RelatorioController extends Controller
 
             return Response()->download($zipFile, 'Arquivos' . '.zip');
         }
+    }
+
+    public function impressaoEmail( Request $request )
+    {
+        $emailMedico    = $request->input('email');
+        $registrosJson  = $request->input('registros');
+
+        $registros  = $this->converterJasonParaObjetoBancoLaravel( $registrosJson );
+        $idade      = $this->calcularIdadeUsuarioConectadoAuth();
+
+        // Campos desse array data, podem ser acessos pela view na função abaixo loadview do PDF
+        $data["email"] = $emailMedico ;
+        $data["title"] = "Relatório médico do paciente " . Auth::user()->name;
+        $data["body"] = "Controle sua saúde";
+        $data["registros"] = $registros;
+        $data["idade"] = $idade;
+
+        // A view abaixo não pode usar tags novas do html5 (tag section por exemplo), se usar o pdf gerado virá em branco
+        $pdf = PDF::loadView('relatorio.emailAnexo', $data);
+
+        // Testar e ver arquivo antes de anexar no email
+        //return $pdf->download('pdf_file.pdf');
+
+        // Testes antigos inicio
+                //$pdf = PDF::loadView('emailPerfilExcluiu', $data);
+                //$pdf = PDF::loadView('relatorio.email', compact('registros','idade'));
+
+                // $pdf = PDF::loadHTML($html, $data);
+                // $html = ob_get_contents();
+                    //$pdf = PDF::loadHTML($html)->setPaper('a4', 'landscape')->setWarnings(false)->download('myfile.pdf');
+                //  $pdf->render();
+                // return $pdf;
+        // Testes antigos fim
+
+        Mail::send('relatorio.emailMensagem', $data, function($message)use($data, $pdf) {
+            $message->to($data["email"], $data["email"])
+                    ->subject($data["title"])
+                    ->attachData($pdf->output(), "relatorioMedico.pdf");
+        });
+
+        session()->flash('success', "Email enviado com sucesso para $emailMedico!");
+        return redirect( route( 'relatorio' ) );
+
+        //->attachData($pdf->output(), "text.pdf");
+       //  ->attachData($pdf, "text.pdf");
+    }
+
+    function converterJasonParaObjetoBancoLaravel( $json )
+    {
+        $registrosArray = json_decode($json, true);
+
+        $registros = collect($registrosArray)->map(function ($registroArray) {
+            return (object) $registroArray;
+        });
+
+        return $registros;
+    }
+
+    function calcularIdadeUsuarioConectadoAuth()
+    {
+        // Calcular idade
+        $idadeUser = User::selectRaw('YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(nascimento))) AS idade')
+        ->where('id', '=', Auth::user()->id )
+        ->get();
+
+        $idade = '';
+
+        foreach ($idadeUser as $item)
+        {
+            $idade = $item->idade;
+        }
+
+        return $idade;
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.site')
 
 @section('content_site')
-    <section class="content mt-3">
+    <section class="content mt-3" id="impressao">
         <div class="container">
 
             <div class="row">
@@ -26,8 +26,32 @@
                                         <a href="{{ route('relatorio') }}" class='btn btn-secondary'> <i class="fas fa-arrow-left"></i> Voltar</a>
                                     </div>
 
-                                    <div class="col-12 mt-1 d-flex justify-content-center mb-3">
+                                    <div class="col-12 mt-1 d-flex justify-content-center mb-3 form-group">
                                         <button onclick="window.print()" class='btn btn-success'> <i class="fas fa-print"></i> Imprimir</button>
+                                    </div>
+
+                                    <div class="col-12 mt-1 d-flex justify-content-center mb-3">
+                                        {{-- <form action="/relatorio-email" method="POST" role="search"> --}}
+                                        <form action="{{ route('relatorio.email') }}" method="POST">
+                                            {{ csrf_field() }}
+
+                                            @php
+                                                $registrosEmail = $registros->toJson();
+                                            @endphp
+
+                                            <input type="text" name="registros" id='registros' value="{{$registrosEmail}}" hidden>
+
+                                            <div class="text-center col-12 form-group">
+                                                <label for="email">Enviar esse relatório por e-mail para seu médico</label>
+                                                <input type="email" class="form-control" name="email" id="email" required data-placement="top" placeholder="nome@server.com.br" data-toggle="tooltip" title="Você pode usar essa opção para enviar esse relatório para seu médico">
+                                            </div>
+
+                                            <div class="col-12 d-flex justify-content-center mt-2">
+                                                <button type="submit" class="btn btn-primary float-center" data-placement="top" data-toggle="tooltip" title="Você pode usar essa opção para enviar esse relatório para seu médico">
+                                                    <span class="fas fa-paperclip"></span> Enviar por e-mail
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
 
                                     {{-- Dados Pessoais inicio --}}
@@ -110,9 +134,9 @@
                                                         $corStatus = "text-danger";
                                                     }
 
-                                                    if( $registro->status == 'Doença warning' )
+                                                    if( $registro->status == 'Doença controlada' )
                                                     {
-                                                        $corStatus = "text-success";
+                                                        $corStatus = "text-warning";
                                                     }
 
                                                     if( $registro->status == 'Curado' )
