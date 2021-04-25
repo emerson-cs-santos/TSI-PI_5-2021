@@ -38,8 +38,8 @@
 
                     <!-- Logo do menu inicio -->
                     <div class="sidebar-header">
-                        <img src="{{ asset('site/img/menuLogo.png') }}" alt="bootraper logo" class="app-logo">
-                        <span style="color: black">Sáude sob Controle</span>
+                        <a href="{{route('index')}}" data-placement="top" data-toggle="tooltip" title="Voltar ao início"> <img src="{{ asset('site/img/menuLogo.png') }}" alt="bootraper logo" class="app-logo"> </a>
+                        <a href="{{route('index')}}" data-placement="top" data-toggle="tooltip" title="Voltar ao início"> <span style="color: black">Sáude sob Controle</span> </a>
                     </div>
                     <!-- Logo do menu fim -->
 
