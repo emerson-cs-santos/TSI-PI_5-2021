@@ -9,6 +9,11 @@ use App\Http\Controllers\EspecialidadesController;
 use App\Http\Controllers\CasosController;
 use App\Http\Controllers\OcorrenciasController;
 use App\Http\Controllers\RelatorioController;
+use App\Http\Controllers\RedeSocialLoginController;
+
+// Login com redes sociais
+Route::get('login/{provider}',          [RedeSocialLoginController::class, 'redirectToProvider'])->name('login.rede.social');
+Route::get('login/{provider}/callback', [RedeSocialLoginController::class, 'handleProviderCallback'])->name('rede.social.callback');
 
 // Não precisa de login
     // Index

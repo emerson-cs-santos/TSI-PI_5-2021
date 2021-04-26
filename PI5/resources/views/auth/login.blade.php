@@ -41,6 +41,30 @@
                 @endif
             </div>
 
+            <div style="margin-top: 20px">
+                <a class="underline text-sm text-green-600 hover:text-green-900" href="{{ route('login.rede.social', ['provider' => 'github']) }}">
+                    {{ __('Entrar com GitHub') }}
+                </a>
+            </div>
+
+            <div style="margin-top: 5px">
+                <a class="underline text-sm text-blue-600 hover:text-blue-900" href="{{ route('login.rede.social', ['provider' => 'facebook']) }}">
+                    {{ __('Entrar com Facebook') }}
+                </a>
+            </div>
+
+            <div style="margin-top: 5px">
+                <a class="underline text-sm text-yellow-600 hover:text-yellow-900" href="{{ route('login.rede.social', ['provider' => 'google']) }}">
+                    {{ __('Entrar com Google') }}
+                </a>
+            </div>
+
+            {{-- <div style="margin-top: 5px">
+                <a class="underline text-sm text-azure-600 hover:text-azure-900" href="{{ route('login.rede.social', ['provider' => 'twitter']) }}">
+                    {{ __('Entrar com Twitter') }}
+                </a>
+            </div> --}}
+
             <div class="flex items-center justify-end mt-4">
 
                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('register') }}">
