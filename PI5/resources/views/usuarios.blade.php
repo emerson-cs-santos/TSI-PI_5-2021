@@ -49,6 +49,7 @@
                                                     <th>Nome</th>
                                                     <th>E-mail</th>
                                                     <th>Nível</th>
+                                                    <th>Premium</th>
                                                     <th>Qtd. Casos</th>
                                                     @if( count($usuarios) > 0 )
                                                         <th class="text-center" colspan="2"  >Ações</th>
@@ -62,6 +63,7 @@
                                                     <td>{{$usuario->name}}</td>
                                                     <td>{{$usuario->email}}</td>
                                                     <td>{{$usuario->type == 'admin' ? ' Administrador' : 'Padrão' }}</td>
+                                                    <td>{{ $usuario->premium == 'sim' ? ' Sim' : 'Não' }}</td>
                                                     <td>{{$usuario->casos()->count()}}</td>
 
                                                     @if(!$usuario->trashed())

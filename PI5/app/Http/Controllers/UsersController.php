@@ -92,6 +92,7 @@ class UsersController extends Controller
             ->orWhere ( 'users.id', 'LIKE', '%' . $buscar . '%' )
             ->orWhere ( 'users.email', 'LIKE', '%' . $buscar . '%' )
             ->orWhere ( 'users.type', 'LIKE', '%' . $buscar . '%' )
+            ->orWhere ( 'users.premium', 'LIKE', '%' . $buscar . '%' )
             ->orderBy('name')
             ->paginate(5)
             ->setPath ( '' );
