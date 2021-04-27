@@ -1,6 +1,5 @@
-<link rel="shortcut icon" href="{{ asset('site/img/logo.png') }}" type="image/x-icon">
-
 <x-guest-layout>
+    {{-- <link rel="shortcut icon" href="{{ asset('site/img/logo.png') }}" type="image/x-icon"> --}}
     <x-jet-authentication-card>
         <img src="{{asset('site/img/menuLogo_original.png')}}" class="w-25 h-25" alt="Logo do site">
         <x-slot name="logo">

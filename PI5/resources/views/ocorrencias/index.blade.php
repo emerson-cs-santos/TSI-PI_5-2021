@@ -53,13 +53,13 @@
 
                                                     <div class="form-group col-sm-12 col-md-5">
                                                         <label for="dataInicial">Data da ocorrência Inicial</label>
-                                                        <input type="date" name="dataInicial" id="dataInicial" placeholder="Data da ocorrência" class="form-control"
+                                                        <input type="date" name="dataInicial" id="dataInicial" class="form-control"
                                                             @if( isset($buscarDataInicial) )  value="{{$buscarDataInicial}}"  @endif >
                                                     </div>
 
                                                     <div class="form-group col-sm-12 col-md-5">
                                                         <label for="dataFinal">Data da ocorrência Final</label>
-                                                        <input type="date" name="dataFinal" id="dataFinal" placeholder="Data da ocorrência" class="form-control"
+                                                        <input type="date" name="dataFinal" id="dataFinal" class="form-control"
                                                             @if( isset($buscarDataFinal) )  value="{{$buscarDataFinal}}"  @endif >
                                                     </div>
 
@@ -86,7 +86,7 @@
                                                     <th>Especialidade</th>
                                                     <th>Qtd. Anexos</th>
                                                     @if( count($ocorrencias) > 0 )
-                                                        <th class="text-center" @if( Request::path() == 'trashed-Ocorrencias' ) colspan="2" @else colspan="3" @endif >Ações</th>
+                                                        <th class="text-center" @if( substr(Request::path(),0,19)  == 'trashed-Ocorrencias' ) colspan="2" @else colspan="3" @endif >Ações</th>
                                                     @endif
                                                 </tr>
                                             </thead>

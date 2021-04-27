@@ -57,7 +57,7 @@
 
                                                     <div class="form-group">
                                                         <label for="data">Data da ocorrência*</label>
-                                                        <input type="date" name="data" id="data" placeholder="Data da ocorrência" class="form-control" value ="{{ substr( $ocorrencia->data ,0,10) }}" required>
+                                                        <input type="date" name="data" id="data" class="form-control" value ="{{ substr( $ocorrencia->data ,0,10) }}" required>
                                                     </div>
 
                                                     <div class="form-group">
@@ -128,7 +128,7 @@
                                                     <div class="form-group mt-3">
 
                                                         <label for="arquivo">Incluir Arquivos</label>
-                                                        <input class="form-control" type="file" name="arquivo[]" id="imagem" accept="image/*, .pdf, .doc, .docx" multiple >
+                                                        <input class="form-control" type="file" name="arquivo[]" id="arquivo" accept="image/*, .pdf, .doc, .docx" multiple >
 
                                                     </div>
 
@@ -145,7 +145,11 @@
                                                                     <tr>
                                                                         <th>Nome</th>
                                                                         <th>Extensão</th>
-                                                                        <th class="text-center" colspan="2" >Ações</th>
+
+                                                                        @if ( $arquivos->count() > 0 )
+                                                                            <th class="text-center" colspan="2" >Ações</th>
+                                                                        @endif
+
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -154,19 +158,22 @@
                                                                         <td>{{$arquivo->nome}}</td>
                                                                         <td>{{$arquivo->extensao}}</td>
 
-                                                                        <td>
-                                                                            <a href="{{ route('Ocorrencias.getfile', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id,'nomearquivo'=>$arquivo->nome] ) }}" class="btn btn-xs btn-info"> <i class="fas fa-file-download"></i> Baixar</a>
-                                                                        </td>
+                                                                        @if ( $arquivos->count() > 0 )
+                                                                            <td>
+                                                                                <a href="{{ route('Ocorrencias.getfile', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id,'nomearquivo'=>$arquivo->nome] ) }}" class="btn btn-xs btn-info"> <i class="fas fa-file-download"></i> Baixar</a>
+                                                                            </td>
 
-                                                                        <td>
-                                                                            <a href="{{ route('Ocorrencias.deletefile', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id,'nomearquivo'=>$arquivo->nome] ) }}" class="btn btn-xs btn-danger" onclick="return confirm('Apagar arquivo?')"> <i class="fas fa-file-excel"></i> Apagar</a>
-                                                                        </td>
+                                                                            <td>
+                                                                                <a href="{{ route('Ocorrencias.deletefile', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id,'nomearquivo'=>$arquivo->nome] ) }}" class="btn btn-xs btn-danger" onclick="return confirm('Apagar arquivo?')"> <i class="fas fa-file-excel"></i> Apagar</a>
+                                                                            </td>
+                                                                        @endif
                                                                     </tr>
                                                                     @endforeach
                                                                 </tbody>
                                                             </table>
                                                         </div>
-                                                        {{-- Tabela fim --}}
+                                                    </div>
+                                                            {{-- Tabela fim --}}
                                                 </div>
 
                                             </div>

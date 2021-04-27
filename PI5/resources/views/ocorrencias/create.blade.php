@@ -57,7 +57,7 @@
 
                                                     <div class="form-group">
                                                         <label for="data">Data da ocorrência*</label>
-                                                        <input type="date" name="data" id="data" placeholder="Data da ocorrência" class="form-control" value ="{{ substr( old('data') ,0,10) }}" required>
+                                                        <input type="date" name="data" id="data" class="form-control" value ="{{ substr( old('data') ,0,10) }}" required>
                                                     </div>
 
                                                     <div class="form-group">
@@ -128,7 +128,7 @@
                                                     <div class="form-group mt-3">
 
                                                         <label for="arquivo">Incluir Arquivos</label>
-                                                        <input class="form-control" type="file" name="arquivo[]" id="imagem" accept="image/*, .pdf, .doc, .docx" multiple >
+                                                        <input class="form-control" type="file" name="arquivo[]" id="arquivo" accept="image/*, .pdf, .doc, .docx" multiple >
 
                                                     </div>
                                                 </div>

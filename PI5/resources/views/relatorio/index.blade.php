@@ -59,13 +59,13 @@
 
                                                     <div class="form-group col-sm-12 col-md-6">
                                                         <label for="dataInicial">Data da ocorrência Inicial</label>
-                                                        <input type="date" name="dataInicial" id="dataInicial" placeholder="Data da ocorrência" class="form-control" oninput='seta_completo_data()'
+                                                        <input type="date" name="dataInicial" id="dataInicial" class="form-control" oninput='seta_completo_data()'
                                                             @if( isset($buscarDataInicial) )  value="{{$buscarDataInicial}}"  @endif >
                                                     </div>
 
                                                     <div class="form-group col-sm-12 col-md-6">
                                                         <label for="dataFinal">Data da ocorrência Final</label>
-                                                        <input type="date" name="dataFinal" id="dataFinal" placeholder="Data da ocorrência" class="form-control" oninput='seta_completo_data()'
+                                                        <input type="date" name="dataFinal" id="dataFinal" class="form-control" oninput='seta_completo_data()'
                                                             @if( isset($buscarDataFinal) )  value="{{$buscarDataFinal}}"  @endif >
                                                     </div>
 

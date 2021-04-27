@@ -23,7 +23,7 @@
 
                                 <div class="form-group">
                                     <label for="nome">Nome*</label>
-                                    <input type="text" class='form-control' name="nome" id="name" autofocus required placeholder="Digite o nome do Caso" value="{{old('nome')}}">
+                                    <input type="text" class='form-control' name="nome" id="nome" autofocus required placeholder="Digite o nome do Caso" value="{{old('nome')}}">
                                 </div>
 
                                 <div class="form-group">

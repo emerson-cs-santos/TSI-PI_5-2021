@@ -51,7 +51,7 @@
                                                     <th>Nível</th>
                                                     <th>Qtd. Casos</th>
                                                     @if( count($usuarios) > 0 )
-                                                        <th class="text-center" @if( Request::path() == 'trashed-Users' ) colspan="2" @else colspan="3" @endif  >Ações</th>
+                                                        <th class="text-center" colspan="2"  >Ações</th>
                                                     @endif
                                                 </tr>
                                             </thead>
