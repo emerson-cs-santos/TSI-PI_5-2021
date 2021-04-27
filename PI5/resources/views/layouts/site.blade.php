@@ -100,6 +100,22 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
 
+                            {{-- inicio - Apenas mostrar essa parte se estiver no modo mobile, pois o logo no dropdown nas tags abaixo não são mostradas --}}
+                            <li class="nav-item menuExibirManual">
+                                @if( !empty(Auth::user()->name)  )
+                                    <div class="ml-5">
+                                        <img src=" @if( empty(Auth::user()->image) )  {{asset('site/img/semImagem.jpg')}} @else {{Auth::user()->image}} @endif" data-placement="top" data-toggle="tooltip" title="Acessar menu" width="50" class="rounded-circle mr-3">
+                                        {{Auth::user()->name}}
+                                    </div>
+                                @else
+                                    <div class="ml-5 mt-3">
+                                        <i class="fas fa-user"></i>
+                                        Usuário
+                                    </div>
+                                @endif
+                            </li>
+                            {{-- fim - Apenas mostrar essa parte se estiver no modo mobile, pois o logo no dropdown nas tags abaixo não são mostradas --}}
+
                             <li class="nav-item dropdown">
 
                                 <div class="nav-dropdown">
