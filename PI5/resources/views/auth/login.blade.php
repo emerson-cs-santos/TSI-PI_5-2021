@@ -33,7 +33,7 @@
                 </label>
             </div> --}}
 
-            <div style="margin-top: 10px">
+            <div style="mt-4">
                 @if (Route::has('password.request'))
                     <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
                         {{ __('Esqueceu sua senha?') }}
@@ -41,19 +41,25 @@
                 @endif
             </div>
 
-            <div style="margin-top: 20px">
+            <div class="flex items-center justify-end mt-5">
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('termos') }}" target="_blank">
+                    {{ __('Ao entrar com uma rede social, você concorda com os Termos de Uso e Política de Privacidade, clique aqui para visualizar.') }}
+                </a>
+            </div>
+
+            <div class="mt-2">
                 <a class="underline text-sm text-green-600 hover:text-green-900" href="{{ route('login.rede.social', ['provider' => 'github']) }}" data-placement="top" data-toggle="tooltip" title="Entre usando suas credenciais do GitHub">
                     {{ __('Entrar com GitHub') }}
                 </a>
             </div>
 
-            <div style="margin-top: 5px">
+            <div class="mt-2">
                 <a class="underline text-sm text-blue-600 hover:text-blue-900" href="{{ route('login.rede.social', ['provider' => 'facebook']) }}" data-placement="top" data-toggle="tooltip" title="Entre usando suas credenciais do FaceBook">
                     {{ __('Entrar com Facebook') }}
                 </a>
             </div>
 
-            <div style="margin-top: 5px">
+            <div class="mt-2">
                 <a class="underline text-sm text-yellow-600 hover:text-yellow-900" href="{{ route('login.rede.social', ['provider' => 'google']) }}" data-placement="top" data-toggle="tooltip" title="Entre usando suas credenciais do Google">
                     {{ __('Entrar com Google') }}
                 </a>

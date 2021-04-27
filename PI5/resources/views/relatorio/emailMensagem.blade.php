@@ -354,7 +354,22 @@
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
-                        <p>Olá, o Paciente <strong> {{Auth::user()->name}} </strong> solicitou o envio de seus registros médicos, seguem em anexo.</p>
+
+                        @php
+                            // Definindo artigo para se adequar ao nome do paciente se é masculino ou feminimo
+                            $artigo = '';
+
+                            if ( Auth::user()->genero == 'Feminino' )
+                            {
+                                $artigo = 'a';
+                            }
+                            else
+                            {
+                                $artigo = 'o';
+                            }
+                        @endphp
+
+                        <p>Olá, {{$artigo}} Paciente <strong> {{Auth::user()->name}} </strong> solicitou o envio de seus registros médicos, seguem em anexo.</p>
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>
                             <tr>

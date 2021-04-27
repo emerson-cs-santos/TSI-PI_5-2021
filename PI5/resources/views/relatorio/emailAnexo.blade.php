@@ -120,8 +120,8 @@
                                     </div>
                                 </div>
 
-                                <div>
-                                    <span> <strong> Ocorrencias:</strong> </span>
+                                <div style="margin-top: 20px">
+                                    <span> <strong> Ocorrências:</strong> </span>
                                 </div>
                             @endif
 

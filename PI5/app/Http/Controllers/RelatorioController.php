@@ -236,8 +236,21 @@ class RelatorioController extends Controller
         $idade      = $this->calcularIdadeUsuarioConectadoAuth();
 
         // Campos desse array data, podem ser acessos pela view na função abaixo loadview do PDF
-        $data["email"] = $emailMedico ;
-        $data["title"] = "Relatório médico do paciente " . Auth::user()->name;
+        $data["email"] = $emailMedico;
+
+        // Definindo preposição para se adequar ao nome do paciente se é masculino ou feminimo
+        $preposicao = '';
+
+        if ( Auth::user()->genero == 'Feminino' )
+        {
+            $preposicao = 'da';
+        }
+        else
+        {
+            $preposicao = 'do';
+        }
+
+        $data["title"] = "Relatório médico $preposicao paciente " . Auth::user()->name;
         $data["body"] = "Controle sua saúde";
         $data["registros"] = $registros;
         $data["idade"] = $idade;
