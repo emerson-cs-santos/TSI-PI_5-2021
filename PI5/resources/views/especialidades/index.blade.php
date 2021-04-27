@@ -53,6 +53,7 @@
                                                 <tr>
                                                     <th>Código</th>
                                                     <th>Nome</th>
+                                                    <th>Qtd. de Casos (todos usuários)</th>
                                                     @if( count($especialidades) > 0 )
                                                         <th class="text-center" @if( Request::path() == 'trashed-Especialidades' ) colspan="2" @else colspan="3" @endif >Ações</th>
                                                     @endif
@@ -63,6 +64,7 @@
                                                 <tr>
                                                     <td>{{$especialidade->id}}</td>
                                                     <td>{{$especialidade->name}}</td>
+                                                    <td>{{$especialidade->casos( $especialidade->id )}}</td>
 
                                                     @if(!$especialidade->trashed())
                                                         <td>

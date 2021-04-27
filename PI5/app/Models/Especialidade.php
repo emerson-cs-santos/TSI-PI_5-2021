@@ -17,4 +17,17 @@ class Especialidade extends Model
     {
         Return $this->hasMany(Ocorrencia::class, 'especialidade_id');
     }
+
+    public function casos( int $especialidadeID ): int
+    {
+        $casos = Ocorrencia::selectRaw('casos.id')
+        ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+        ->join('casos', 'casos.id', 'ocorrencias.caso_id')
+        ->where('especialidades.id', $especialidadeID)
+        ->groupBy('casos.id')
+        ->orderByDesc('casos.id')
+        ->get();
+
+        return $casos->count();
+    }
 }
