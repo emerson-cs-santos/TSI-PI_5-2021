@@ -42,19 +42,19 @@
             </div>
 
             <div style="margin-top: 20px">
-                <a class="underline text-sm text-green-600 hover:text-green-900" href="{{ route('login.rede.social', ['provider' => 'github']) }}">
+                <a class="underline text-sm text-green-600 hover:text-green-900" href="{{ route('login.rede.social', ['provider' => 'github']) }}" data-placement="top" data-toggle="tooltip" title="Entre usando suas credenciais do GitHub">
                     {{ __('Entrar com GitHub') }}
                 </a>
             </div>
 
             <div style="margin-top: 5px">
-                <a class="underline text-sm text-blue-600 hover:text-blue-900" href="{{ route('login.rede.social', ['provider' => 'facebook']) }}">
+                <a class="underline text-sm text-blue-600 hover:text-blue-900" href="{{ route('login.rede.social', ['provider' => 'facebook']) }}" data-placement="top" data-toggle="tooltip" title="Entre usando suas credenciais do FaceBook">
                     {{ __('Entrar com Facebook') }}
                 </a>
             </div>
 
             <div style="margin-top: 5px">
-                <a class="underline text-sm text-yellow-600 hover:text-yellow-900" href="{{ route('login.rede.social', ['provider' => 'google']) }}">
+                <a class="underline text-sm text-yellow-600 hover:text-yellow-900" href="{{ route('login.rede.social', ['provider' => 'google']) }}" data-placement="top" data-toggle="tooltip" title="Entre usando suas credenciais do Google">
                     {{ __('Entrar com Google') }}
                 </a>
             </div>

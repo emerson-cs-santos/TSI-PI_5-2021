@@ -51,3 +51,15 @@ function seta_completo_busca()
     document.getElementById("dataFinal").value = '';
     document.getElementById("tipo").value = 'completo';
 }
+
+function preview_image(event)
+{
+    var reader = new FileReader();
+    reader.onload =
+        function()
+        {
+            var output = document.getElementById('ExibirIMG_inputfile');
+            output.src = reader.result;
+        }
+    reader.readAsDataURL(event.target.files[0]);
+}

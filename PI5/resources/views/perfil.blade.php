@@ -52,7 +52,17 @@
                                     <input type="date" name="nascimento" id="nascimento" placeholder="Data de Aniversário" class="form-control @error('password') is-invalid @enderror" value ="{{ substr(Auth::user()->nascimento,0,10) }}" required>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group mt-4 mb-3">
+                                    <label for="imagem">Definir imagem de perfil</label>
+                                    <input class="form-control" type="file" name="imagem" id="imagem" accept="image/png, image/jpeg, image/jpg" onchange="preview_image(event)" >
+
+                                    <figure class="rounded mx-auto d-block img_small_cli img_normal_cli mt-4 text-center">
+                                        <img id="ExibirIMG_inputfile" class="form-control img_small_cli img_normal_cli" alt="Imagem do Usuário" src=" @if( empty(Auth::user()->image) )  {{asset('site/img/semImagem.jpg')}} @else {{Auth::user()->image}} @endif" data-placement="top" data-toggle="tooltip" title="Sua imagem de Perfil!" >
+                                        <figcaption>Imagem de de Perfil</figcaption>
+                                    </figure>
+                                </div>
+
+                                <div class="form-group mt-5">
                                     <button type="submit" class="btn btn-primary"> <i class="fas fa-save"></i> Salvar</button>
                                 </div>
                             </form>

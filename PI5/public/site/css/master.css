@@ -165,7 +165,7 @@ body {
 */
 
 /*------------------------------------------------------------------
-[6. Boxes / .box] 
+[6. Boxes / .box]
 */
 .box {
     position: relative;
@@ -201,7 +201,7 @@ body {
 }
 
 /*------------------------------------------------------------------
-[7. Dashboard Cards / .card] 
+[7. Dashboard Cards / .card]
 */
 .card {
     margin-bottom: 15px;
@@ -237,7 +237,7 @@ body {
 }
 
 /*------------------------------------------------------------------
-[8. Miscellaneous ] 
+[8. Miscellaneous ]
 */
 .line {
     border-bottom: 1px solid #E0E0E0;
@@ -283,7 +283,7 @@ body {
 }
 
 /*------------------------------------------------------------------
-[9. Adjustments to default behaviors] 
+[9. Adjustments to default behaviors]
 */
 a,
 a:hover,
@@ -372,7 +372,7 @@ table.dataTable>tbody>tr.child ul.dtr-details {
 }
 
 /*------------------------------------------------------------------
-[10. Colors / .teal, .olive, .violet, .orange, .darkgray, .blue, .grey] 
+[10. Colors / .teal, .olive, .violet, .orange, .darkgray, .blue, .grey]
 */
 .teal {
     color: #00b5ad !important;
@@ -403,7 +403,7 @@ table.dataTable>tbody>tr.child ul.dtr-details {
 }
 
 /*------------------------------------------------------------------
-[11. Responsive properties] 
+[11. Responsive properties]
 */
 @media (max-width: 768px) {
     .display-absolute {
@@ -458,5 +458,23 @@ table.dataTable>tbody>tr.child ul.dtr-details {
     .navbar-expand-lg .navbar-nav {
         -ms-flex-direction: row;
         flex-direction: row;
+    }
+}
+
+@media screen and (max-width: 411px)
+{
+    .img_small_cli
+    {
+        height:200px;
+        width:200px;
+    }
+}
+
+@media only screen and (min-width: 412px)
+{
+    .img_normal_cli
+    {
+        height:300px;
+        width:300px;
     }
 }

@@ -47,6 +47,17 @@ class PerfilController extends Controller
             $usuario->email_verified_at = null;
         }
 
+        // Apenas gravar imagem se foi alterada
+        $file = $request->file('imagem');
+       if ( !empty($file) )
+       {
+            $data               = file_get_contents($file);
+            $dataEncoded        = base64_encode($data);
+            $imagem_convertida  = "data:image/jpeg;base64,$dataEncoded";
+
+            $usuario->image     = $imagem_convertida;
+       }
+
        $usuario->save();
 
         session()->flash('success', 'Informações atualizadas com sucesso!');

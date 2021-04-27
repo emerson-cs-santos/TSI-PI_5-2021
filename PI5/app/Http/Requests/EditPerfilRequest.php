@@ -18,6 +18,7 @@ class EditPerfilRequest extends FormRequest
         return [
             'name'    => 'required|min:3'
             ,'email'  => [ 'required', 'email:filter', new UserEmail( request()->all() ) ]
+            ,'imagem' => 'max:2000'
         ];
     }
 }

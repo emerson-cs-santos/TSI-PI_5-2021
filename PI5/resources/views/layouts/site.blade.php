@@ -101,10 +101,21 @@
                         <ul class="nav navbar-nav ml-auto">
 
                             <li class="nav-item dropdown">
+
                                 <div class="nav-dropdown">
+
                                     <a href="" class="nav-item nav-link dropdown-toggle text-secondary" data-toggle="dropdown">
-                                        <i class="fas fa-user"></i>
-                                        <span> @if( !empty(Auth::user()->name)  ) {{Auth::user()->name}} @else Usuário @endif </span>
+
+                                        <span>
+                                            @if( !empty(Auth::user()->name)  )
+                                                <img src=" @if( empty(Auth::user()->image) )  {{asset('site/img/semImagem.jpg')}} @else {{Auth::user()->image}} @endif" data-placement="top" data-toggle="tooltip" title="Acessar menu" width="50" class="rounded-circle mr-3">
+                                                {{Auth::user()->name}}
+                                            @else
+                                                <i class="fas fa-user"></i>
+                                                Usuário
+                                            @endif
+                                        </span>
+
                                         <i style="font-size: .8em;" class="fas fa-caret-down"></i>
                                     </a>
 
