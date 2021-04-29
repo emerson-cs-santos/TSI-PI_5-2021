@@ -116,6 +116,7 @@
                                                     <th>Especialidade</th>
                                                     <th>Tipo</th>
                                                     <th>Relevância</th>
+                                                    <th>Qtd. Anexos</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -136,6 +137,7 @@
                                                             <td>{{$registro->especialidade}}</td>
                                                             <td>{{$registro->tipo}}</td>
                                                             <td>{{$registro->importancia}}</td>
+                                                            <td>{{$registro->arquivos()->count()}}</td>
                                                         </tr>
 
                                                     @endif

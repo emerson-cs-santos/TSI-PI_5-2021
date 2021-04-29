@@ -28,9 +28,15 @@
                                 </div>
 
                                 @php
-                                    $date = DateTime::createFromFormat('Y-m-d H:i:s', Auth::user()->nascimento );
-                                    $nascimento = $date->format('d/m/Y');
-                                @endphp
+                                    $nascimento = 'Não informado';
+
+                                    if ( !empty(Auth::user()->nascimento) )
+                                    {
+                                        $nacimento = Auth::user()->nascimento;
+                                        $date = DateTime::createFromFormat('Y-m-d H:i:s', $nacimento );
+                                        $nascimento = $date->format('d/m/Y');
+                                    }
+                                    @endphp
 
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <span class="h5">Aniversário: {{$nascimento}}</span>

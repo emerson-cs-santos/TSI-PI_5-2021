@@ -42,7 +42,7 @@
                                             <input type="text" name="registros" id='registros' value="{{$registrosEmail}}" hidden>
 
                                             <div class="text-center col-12 form-group">
-                                                <label for="email">Enviar esse relatório por e-mail para seu médico</label>
+                                                <label for="email">Enviar esse relatório (anexos também) por e-mail para seu médico</label>
                                                 <input type="email" class="form-control" name="email" id="email" required data-placement="top" placeholder="nome@server.com.br" data-toggle="tooltip" title="Você pode usar essa opção para enviar esse relatório para seu médico">
                                             </div>
 
@@ -66,8 +66,14 @@
                                         </div>
 
                                         @php
-                                            $date = DateTime::createFromFormat('Y-m-d H:i:s', Auth::user()->nascimento );
-                                            $nascimento = $date->format('d/m/Y');
+                                            $nascimento = 'Não informado';
+
+                                            if ( !empty(Auth::user()->nascimento) )
+                                            {
+                                                $nacimento = Auth::user()->nascimento;
+                                                $date = DateTime::createFromFormat('Y-m-d H:i:s', $nacimento );
+                                                $nascimento = $date->format('d/m/Y');
+                                            }
                                         @endphp
 
                                         <div class="col-12 col-sm-6 col-md-3">
