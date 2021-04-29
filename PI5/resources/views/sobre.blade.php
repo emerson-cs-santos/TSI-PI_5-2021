@@ -26,8 +26,16 @@
 
                 <p class="h3"> WebSite com objetivo de controlar casos médicos pela perspectiva do paciente</p>
 
-                <p class="h3"> Aluno: Emerson Costa Santos </p>
-                <p class="h3"> Contato: emersoncs@outlook.com.br </p>
+                <div class="mt-3">
+                    <p class="h3 font-weight-bold"> Aluno:</p>
+                    <p class="h3"> Emerson Costa Santos </p>
+                </div>
+
+                <div class="mt-3">
+                    <p class="h3 font-weight-bold"> Contato: </p>
+                    <p class="h3"> emersoncs@outlook.com.br </p>
+                </div>
+
             </div>
 
         </div>
