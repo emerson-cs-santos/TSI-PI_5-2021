@@ -42,7 +42,7 @@
                                             <input type="text" name="registros" id='registros' value="{{$registrosEmail}}" hidden>
 
                                             <div class="text-center col-12 form-group">
-                                                <label for="email">Enviar esse relatório (anexos também) por e-mail para seu médico</label>
+                                                <label for="email">Enviar esse relatório por e-mail para seu médico</label>
                                                 <input type="email" class="form-control" name="email" id="email" required data-placement="top" placeholder="nome@server.com.br" data-toggle="tooltip" title="Você pode usar essa opção para enviar esse relatório para seu médico">
                                             </div>
 
