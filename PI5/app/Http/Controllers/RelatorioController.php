@@ -223,7 +223,7 @@ class RelatorioController extends Controller
             // Fecha arquivo zip
             $zip->close();
 
-            return Response()->download($zipFile, 'Arquivos' . '.zip');
+            return Response()->download($zipFile, 'arquivosrelatorio' . '.zip');
         }
     }
 
