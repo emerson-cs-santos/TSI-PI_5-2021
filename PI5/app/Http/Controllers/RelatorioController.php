@@ -209,7 +209,7 @@ class RelatorioController extends Controller
         {
             // Cria e abre arquivo zip
             $zip        = new ZipArchive;
-            $zipFile    = public_path().'/files/'. 'arquivosRelatorio' . '.zip';
+            $zipFile    = public_path().'/files/'. 'arquivosRelatorio_' . uniqid() . '.zip';
 
             if ($zip->open($zipFile, ZipArchive::CREATE) === TRUE)
             {
@@ -223,7 +223,7 @@ class RelatorioController extends Controller
             // Fecha arquivo zip
             $zip->close();
 
-            return Response()->download($zipFile, 'arquivosrelatorio' . '.zip');
+            return Response()->download($zipFile, 'arquivosrelatorio_' . uniqid() . '.zip');
         }
     }
 

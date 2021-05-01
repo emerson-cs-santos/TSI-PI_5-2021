@@ -509,7 +509,7 @@ class OcorrenciasController extends Controller
         {
             // Cria e abre arquivo zip
             $zip        = new ZipArchive;
-            $zipFile    = public_path().'/files/'. 'arquivos' . '.zip';
+            $zipFile    = public_path().'/files/'. 'arquivos_' . uniqid() . '.zip';
 
             if ($zip->open($zipFile, ZipArchive::CREATE) === TRUE)
             {
@@ -523,7 +523,7 @@ class OcorrenciasController extends Controller
             // Fecha arquivo zip
             $zip->close();
 
-            return Response()->download($zipFile, 'Arquivos' . '.zip');
+            return Response()->download($zipFile, 'Arquivos_' . uniqid() . '.zip');
         }
     }
 
