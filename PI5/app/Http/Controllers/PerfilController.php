@@ -96,7 +96,7 @@ class PerfilController extends Controller
 
         \Mail::to( $usuario->email )->send(new \App\Mail\ExcluiuPerfilMail($details));
 
-        $this->apagarPerfilBanco(0);
+        $this->apagarPerfilBanco( $usuario->id );
 
         session()->flash('success', 'Usuário apagado com sucesso, foi enviado um e-mail para você confirmando essa ação. É uma pena ver você ir, esperamos ter ajudado =D');
 
