@@ -39,7 +39,15 @@
 
                             <div class="form-group">
                                 <label for="medicamentos">Medicamentos</label>
-                                <textarea name="medicamentos" class='form-control' id="medicamentos" rows=10 placeholder="Digite os medicamentos que estão sendo utilizados">{{$caso->medicamentos}}</textarea>
+                                @php
+                                    $medicamentos = '';
+
+                                    if ( $caso->medicamentos !== ' ' )
+                                    {
+                                        $medicamentos = $caso->medicamentos;
+                                    }
+                                @endphp
+                                <textarea name="medicamentos" class='form-control' id="medicamentos" rows=10 placeholder="Digite os medicamentos que estão sendo utilizados">{{$medicamentos}}</textarea>
                             </div>
 
                             <div class="form-group">

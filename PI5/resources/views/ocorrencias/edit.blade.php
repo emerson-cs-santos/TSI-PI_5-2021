@@ -91,28 +91,68 @@
                                                 <div class="col-md-12">
 
                                                     <div class="form-group">
+                                                        @php
+                                                            $local = '';
+
+                                                            if ( $ocorrencia->local !== ' ' )
+                                                            {
+                                                                $local = $ocorrencia->local;
+                                                            }
+                                                        @endphp
                                                         <label for="local">Local</label>
-                                                        <textarea name="local" class='form-control' id="local" rows=2 placeholder="Digite o local que ocorreu (clínica, hospital)">{{ $ocorrencia->local }}</textarea>
+                                                        <textarea name="local" class='form-control' id="local" rows=2 placeholder="Digite o local que ocorreu (clínica, hospital)">{{ $local }}</textarea>
                                                     </div>
 
                                                     <div class="form-group">
+                                                        @php
+                                                            $medico = '';
+
+                                                            if ( $ocorrencia->medico !== ' ' )
+                                                            {
+                                                                $medico = $ocorrencia->medico;
+                                                            }
+                                                        @endphp
                                                         <label for="medico">Médico</label>
-                                                        <textarea name="medico" class='form-control' id="medico" rows=2 placeholder="Digite o nome do médico ou profissional">{{ $ocorrencia->medico }}</textarea>
+                                                        <textarea name="medico" class='form-control' id="medico" rows=2 placeholder="Digite o nome do médico ou profissional">{{ $medico }}</textarea>
                                                     </div>
 
                                                     <div class="form-group">
+                                                        @php
+                                                            $crm = '';
+
+                                                            if ( $ocorrencia->crm !== ' ' )
+                                                            {
+                                                                $crm = $ocorrencia->crm;
+                                                            }
+                                                        @endphp
                                                         <label for="crm">CRM</label>
-                                                        <textarea name="crm" class='form-control' id="crm" rows=1 placeholder="Digite o crm do médico/profissional">{{ $ocorrencia->crm }}</textarea>
+                                                        <textarea name="crm" class='form-control' id="crm" rows=1 placeholder="Digite o crm do médico/profissional">{{ $crm }}</textarea>
                                                     </div>
 
                                                     <div class="form-group">
+                                                        @php
+                                                            $receitas = '';
+
+                                                            if ( $ocorrencia->receitas  !== ' ' )
+                                                            {
+                                                                $receitas = $ocorrencia->receitas ;
+                                                            }
+                                                        @endphp
                                                         <label for="receitas">Receitas</label>
-                                                        <textarea name="receitas" class='form-control' id="receitas" rows=3 placeholder="Digite as receitas obtidas">{{ $ocorrencia->receitas }}</textarea>
+                                                        <textarea name="receitas" class='form-control' id="receitas" rows=3 placeholder="Digite as receitas obtidas">{{ $receitas }}</textarea>
                                                     </div>
 
                                                     <div class="form-group">
+                                                        @php
+                                                            $desc = '';
+
+                                                            if ( $ocorrencia->desc !== ' ' )
+                                                            {
+                                                                $desc = $ocorrencia->desc;
+                                                            }
+                                                        @endphp
                                                         <label for="desc">Detalhes</label>
-                                                        <textarea name="desc" class='form-control' id="desc" rows=5 placeholder="Digite os detalhes do que ocorreu">{{ $ocorrencia->desc }}</textarea>
+                                                        <textarea name="desc" class='form-control' id="desc" rows=5 placeholder="Digite os detalhes do que ocorreu">{{ $desc }}</textarea>
                                                     </div>
 
                                                 </div>

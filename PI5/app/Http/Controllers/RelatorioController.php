@@ -22,7 +22,8 @@ class RelatorioController extends Controller
         ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
         ->join('casos', 'casos.id', 'ocorrencias.caso_id')
         ->where('ocorrencias.user_id', '=', Auth::user()->id )
-        ->orderByDesc('id')
+        ->orderByDesc('casos.id')
+        ->orderByDesc('ocorrencias.id')
         ->take(5)
         ->get();
 
@@ -67,7 +68,8 @@ class RelatorioController extends Controller
                 ->orWhere ( 'especialidades.name', 'LIKE', '%' . $buscar . '%' )
                 ->orWhere ( 'ocorrencias.tipo', 'LIKE', '%' . $buscar . '%' )
                 ->orWhere ( 'ocorrencias.importancia', 'LIKE', '%' . $buscar . '%' )
-                ->orderByDesc('data')
+                ->orderByDesc('casos.id')
+                ->orderByDesc('ocorrencias.id')
                 ->get();
 
                 return view('relatorio.index')
@@ -85,7 +87,8 @@ class RelatorioController extends Controller
                 ->where('ocorrencias.user_id', '=', Auth::user()->id )
                 ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
                 ->whereDate('ocorrencias.data','<=', $buscarDataFinal)
-                ->orderByDesc('data')
+                ->orderByDesc('casos.id')
+                ->orderByDesc('ocorrencias.id')
                 ->get();
 
                 return view('relatorio.index')
@@ -105,7 +108,8 @@ class RelatorioController extends Controller
                 ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
                 ->join('casos', 'casos.id', 'ocorrencias.caso_id')
                 ->where('ocorrencias.user_id', '=', Auth::user()->id )
-                ->orderByDesc('id')
+                ->orderByDesc('casos.id')
+                ->orderByDesc('ocorrencias.id')
                 ->take(5)
                 ->get();
 
@@ -124,7 +128,8 @@ class RelatorioController extends Controller
                     ->join('casos', 'casos.id', 'ocorrencias.caso_id')
                     ->where('ocorrencias.user_id', '=', Auth::user()->id )
                     ->where('ocorrencias.importancia', '=', 'Importante' )
-                    ->orderByDesc('id')
+                    ->orderByDesc('casos.id')
+                    ->orderByDesc('ocorrencias.id')
                     ->get();
 
                     return view('relatorio.index', ['registros' => $registros])
@@ -139,7 +144,8 @@ class RelatorioController extends Controller
                     ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
                     ->join('casos', 'casos.id', 'ocorrencias.caso_id')
                     ->where('ocorrencias.user_id', '=', Auth::user()->id )
-                    ->orderByDesc('id')
+                    ->orderByDesc('casos.id')
+                    ->orderByDesc('ocorrencias.id')
                     ->get();
 
                     return view('relatorio.index', ['registros' => $registros])
