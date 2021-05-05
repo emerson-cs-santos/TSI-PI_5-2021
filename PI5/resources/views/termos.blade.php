@@ -22,7 +22,7 @@
             </div>
 
             <h3>Termos de Uso</h3>
-            <p>Os serviços do sistema são fornecidos pela pessoa jurídica com a seguinte Razão Social/nome: <strong>Sistemas SA </strong>, com nome fantasia <strong>Sistemas Espertos</strong>, inscrito no CNPJ sob o nº <strong>85.389.782/0001-55</strong>,, titular da propriedade intelectual sobre software, website, aplicativos, conteúdos e demais ativos relacionados à plataforma <strong>Saúde sob Controle</strong>.</p>
+            <p>Os serviços do sistema são fornecidos pela pessoa jurídica com a seguinte Razão Social/nome: <strong>Sistemas SA </strong>, com nome fantasia <strong>Sistemas Espertos</strong>, inscrito no CNPJ sob o nº <strong>85.389.782/0001-55</strong>,titular da propriedade intelectual sobre software, website, aplicativos, conteúdos e demais ativos relacionados à plataforma <strong>Saúde sob Controle</strong>.</p>
 
             <h4 class="font-weight-bold">1. Do objeto</h4>
             <p>A plataforma visa auxiliar os usuários a controlar seus <strong>casos médicos</strong>.</p>
