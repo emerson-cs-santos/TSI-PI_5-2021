@@ -42,23 +42,22 @@
                                         <div class="tab-pane fade active show" id="geral" role="tabpanel" aria-labelledby="geral-tab">
                                             <div class="col-md-12">
 
-                                                <div class="form-group">
-                                                    <label for="tipo">Tipo*</label>
-                                                    <select name="tipo" class="form-control" id="tipo" >
-                                                        <option value="Consulta"        @if( $ocorrencia->tipo == 'Consulta')         selected @endif >Consulta</option>
-                                                        <option value="Exame"           @if( $ocorrencia->tipo == 'Exame')            selected @endif >Exame</option>
-                                                        <option value="Pronto socorro"  @if( $ocorrencia->tipo == 'Pronto socorro')   selected @endif >Pronto socorro</option>
-                                                        <option value="Cirurgia"        @if( $ocorrencia->tipo == 'CuraCirurgiado')   selected @endif >Cirurgia</option>
+                                                <div class="form-group mt-3">
+                                                    <label for="tipo_id">Tipo</label>
+                                                    <select name="tipo_id" class="form-control" id="tipo_id" >
+                                                        @foreach($tipos as $tipo)
+                                                            <option style="color: {{$tipo->color}}" value="{{$tipo->id}}" @if( $ocorrencia->tipo_id == $tipo->id ) selected @endif>{{$tipo->name}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="data">Data da ocorrência*</label>
+                                                    <label for="data">Data da ocorrência</label>
                                                     <input type="date" name="data" id="data" class="form-control" value ="{{ substr( $ocorrencia->data ,0,10) }}" required>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="especialidade_id">Especialidade*:</label>
+                                                    <label for="especialidade_id">Especialidade:</label>
                                                     <select name="especialidade_id" class="form-control" id="especialidade_id" >
                                                         @foreach($especialidades as $especialidade)
                                                             <option value="{{$especialidade->id}}" @if( $ocorrencia->especialidade_id == $especialidade->id ) selected @endif >{{$especialidade->name}}</option>
@@ -67,7 +66,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="importancia">Relevância*</label>
+                                                    <label for="importancia">Relevância</label>
                                                     <select name="importancia" class="form-control" id="importancia" >
                                                         <option value="Importante"  @if( $ocorrencia->importancia == 'Importante')    selected @endif >Importante</option>
                                                         <option value="Rotina"      @if( $ocorrencia->importancia == 'Rotina')        selected @endif >Rotina</option>
@@ -75,7 +74,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="resumo">Resumo*</label>
+                                                    <label for="resumo">Resumo</label>
                                                     <textarea name="resumo" class='form-control' id="resumo" required rows=4 placeholder="Digite um resumo do que ocorreu">{{ $ocorrencia->resumo }}</textarea>
                                                 </div>
 

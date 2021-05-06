@@ -14,6 +14,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel-lang/lang": "~7.0",
+        "laravel-validation-rules/colour": "^1.5",
         "laravel/framework": "^8.12",
         "laravel/jetstream": "^2.2",
         "laravel/sanctum": "^2.6",

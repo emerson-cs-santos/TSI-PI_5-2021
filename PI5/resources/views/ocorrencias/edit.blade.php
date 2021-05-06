@@ -45,13 +45,12 @@
                                             <div class="tab-pane fade active show" id="geral" role="tabpanel" aria-labelledby="geral-tab">
                                                 <div class="col-md-12">
 
-                                                    <div class="form-group">
-                                                        <label for="tipo">Tipo*</label>
-                                                        <select name="tipo" class="form-control" id="tipo" >
-                                                            <option value="Consulta"        @if( $ocorrencia->tipo == 'Consulta')         selected @endif >Consulta</option>
-                                                            <option value="Exame"           @if( $ocorrencia->tipo == 'Exame')            selected @endif >Exame</option>
-                                                            <option value="Pronto socorro"  @if( $ocorrencia->tipo == 'Pronto socorro')   selected @endif >Pronto socorro</option>
-                                                            <option value="Cirurgia"        @if( $ocorrencia->tipo == 'CuraCirurgiado')   selected @endif >Cirurgia</option>
+                                                    <div class="form-group mt-3">
+                                                        <label for="tipo_id">Tipo*</label>
+                                                        <select name="tipo_id" class="form-control" id="tipo_id" >
+                                                            @foreach($tipos as $tipo)
+                                                                <option style="color: {{$tipo->color}}" value="{{$tipo->id}}" @if( $ocorrencia->tipo_id == $tipo->id ) selected @endif>{{$tipo->name}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
 

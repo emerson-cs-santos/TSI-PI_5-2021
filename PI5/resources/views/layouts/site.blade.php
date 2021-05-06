@@ -73,9 +73,9 @@
                                         <li>
                                             <a href="{{route('Especialidades.index')}}"><i class="fas fa-list-alt"></i> Especialidades</a>
                                         </li>
-                                        {{-- <li>
-                                            <a href="500.html"><i class="fas fa-toolbox"></i> Outras Configurações</a>
-                                        </li> --}}
+                                        <li>
+                                            <a href="{{route('Tipos.index')}}"><i class="fas fa-dot-circle"></i> Tipos</a>
+                                        </li>
                                     </ul>
                                 </li>
                             @endif
@@ -194,6 +194,7 @@
         </footer>
 
         <!-- JS -->
+        @yield('script')
         <script src="{{ asset('site/vendor/jquery/jquery.min.js') }}"></script>
         <script src="{{ asset('site/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('site/js/script.js') }}"></script>

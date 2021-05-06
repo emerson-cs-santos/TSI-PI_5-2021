@@ -18,8 +18,9 @@ class RelatorioController extends Controller
 {
     public function relatorio()
     {
-        $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos')
+        $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
         ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+        ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
         ->join('casos', 'casos.id', 'ocorrencias.caso_id')
         ->where('ocorrencias.user_id', '=', Auth::user()->id )
         ->orderByDesc('casos.id')
@@ -59,8 +60,9 @@ class RelatorioController extends Controller
         {
             if ( empty($buscaPorData) )
             {
-                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos')
+                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
                 ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
                 ->join('casos', 'casos.id', 'ocorrencias.caso_id')
                 ->where('ocorrencias.user_id', '=', Auth::user()->id )
                 ->where ('casos.nome', 'LIKE', '%' . $buscar . '%' )
@@ -81,8 +83,9 @@ class RelatorioController extends Controller
             }
             else
             {
-                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos')
+                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
                 ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
                 ->join('casos', 'casos.id', 'ocorrencias.caso_id')
                 ->where('ocorrencias.user_id', '=', Auth::user()->id )
                 ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
@@ -104,8 +107,9 @@ class RelatorioController extends Controller
         {
             if( $buscarTipo == 'simples' )
             {
-                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos')
+                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
                 ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
                 ->join('casos', 'casos.id', 'ocorrencias.caso_id')
                 ->where('ocorrencias.user_id', '=', Auth::user()->id )
                 ->orderByDesc('casos.id')
@@ -123,8 +127,9 @@ class RelatorioController extends Controller
             {
                 if( $buscarTipo == 'resumido' )
                 {
-                    $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos')
+                    $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
                     ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+                    ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
                     ->join('casos', 'casos.id', 'ocorrencias.caso_id')
                     ->where('ocorrencias.user_id', '=', Auth::user()->id )
                     ->where('ocorrencias.importancia', '=', 'Importante' )
@@ -140,8 +145,9 @@ class RelatorioController extends Controller
                 }
                 else
                 {
-                    $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos')
+                    $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
                     ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+                    ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
                     ->join('casos', 'casos.id', 'ocorrencias.caso_id')
                     ->where('ocorrencias.user_id', '=', Auth::user()->id )
                     ->orderByDesc('casos.id')

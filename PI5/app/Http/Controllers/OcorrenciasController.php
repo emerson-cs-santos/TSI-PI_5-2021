@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
+use App\Models\Tipo;
 
 class OcorrenciasController extends Controller
 {
@@ -29,8 +30,9 @@ class OcorrenciasController extends Controller
 
     public function index( $casoId )
     {
-        $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')
+        $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
         ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+        ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
         ->where('caso_id', '=', $casoId )
         ->where('user_id', '=', Auth::user()->id )
         ->orderByDesc('id')
@@ -43,7 +45,9 @@ class OcorrenciasController extends Controller
 
     public function create( $casoId )
     {
-        return view('ocorrencias.create')->with( ['casoId' => $casoId] )->with('especialidades', Especialidade::orderBy('name')->get() );
+        return view('ocorrencias.create')->with( ['casoId' => $casoId] )
+        ->with('especialidades', Especialidade::orderBy('name')->get())
+        ->with('tipos', Tipo::orderBy('name')->get());
     }
 
     public function store(CreateOcorrenciasRequest $request, $casoId)
@@ -95,7 +99,7 @@ class OcorrenciasController extends Controller
             'user_id'           => Auth::user()->id
             ,'caso_id'          => $casoId
             ,'especialidade_id' => $request->especialidade_id
-            ,'tipo'             => $request->tipo
+            ,'tipo_id'          => $request->tipo_id
             ,'data'             => $request->data
             ,'importancia'      => $request->importancia
             ,'resumo'           => $request->resumo
@@ -129,6 +133,7 @@ class OcorrenciasController extends Controller
         ->with( ['casoId' => $casoId] )
         ->with('ocorrencia', $ocorrencia)
         ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('tipos', Tipo::orderBy('name')->get())
         ->with('arquivos', $arquivos);
     }
 
@@ -146,6 +151,7 @@ class OcorrenciasController extends Controller
         ->with( ['casoId' => $casoId] )
         ->with('ocorrencia', $ocorrencia)
         ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('tipos', Tipo::orderBy('name')->get())
         ->with('arquivos', $arquivos);
     }
 
@@ -201,7 +207,7 @@ class OcorrenciasController extends Controller
             'user_id'           => Auth::user()->id
             ,'caso_id'          => $casoId
             ,'especialidade_id' => $request->especialidade_id
-            ,'tipo'             => $request->tipo
+            ,'tipo_id'          => $request->tipo_id
             ,'data'             => $request->data
             ,'importancia'      => $request->importancia
             ,'resumo'           => $request->resumo
@@ -251,8 +257,9 @@ class OcorrenciasController extends Controller
 
     public function trashed( $casoId )
     {
-        $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')->onlyTrashed()
+        $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')->onlyTrashed()
         ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+        ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
         ->where('caso_id', '=', $casoId )
         ->where('user_id', '=', Auth::user()->id )
         ->orderByDesc('id')
@@ -271,11 +278,12 @@ class OcorrenciasController extends Controller
 
         if($buscar != "")
         {
-            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')
+            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
             ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+            ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
             ->where('user_id', '=', Auth::user()->id )
             ->where('caso_id', '=', $casoId )
-            ->where ( 'ocorrencias.tipo', 'LIKE', '%' . $buscar . '%' )
+            ->where ( 'tipos.name', 'LIKE', '%' . $buscar . '%' )
             ->orWhere ( 'ocorrencias.id', 'LIKE', '%' . $buscar . '%' )
             ->orWhere ( 'ocorrencias.importancia', 'LIKE', '%' . $buscar . '%' )
             ->orWhere ( 'especialidades.name', 'LIKE', '%' . $buscar . '%' )
@@ -294,8 +302,9 @@ class OcorrenciasController extends Controller
         }
         else
         {
-            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')
+            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
             ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+            ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
             ->where('user_id', '=', Auth::user()->id )
             ->where('caso_id', '=', $casoId )
             ->orderByDesc('data')
@@ -323,8 +332,9 @@ class OcorrenciasController extends Controller
         {
             if( $buscarDataInicial != "" and $buscarDataFinal != "" )
             {
-                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')
+                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
                 ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
                 ->where('user_id', '=', Auth::user()->id )
                 ->where('caso_id', '=', $casoId )
                 ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
@@ -346,8 +356,9 @@ class OcorrenciasController extends Controller
 
             if( empty($buscarDataInicial) and $buscarDataFinal != "" )
             {
-                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')
+                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
                 ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
                 ->where('user_id', '=', Auth::user()->id )
                 ->where('caso_id', '=', $casoId )
                 ->whereDate('ocorrencias.data','<=', $buscarDataFinal)
@@ -367,8 +378,9 @@ class OcorrenciasController extends Controller
 
             if( $buscarDataInicial != "" and empty($buscarDataFinal)  )
             {
-                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')
+                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
                 ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
                 ->where('user_id', '=', Auth::user()->id )
                 ->where('caso_id', '=', $casoId )
                 ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
@@ -389,8 +401,9 @@ class OcorrenciasController extends Controller
         }
         else
         {
-            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade')
+            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
             ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+            ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
             ->where('user_id', '=', Auth::user()->id )
             ->where('caso_id', '=', $casoId )
             ->orderByDesc('data')

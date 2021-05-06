@@ -14,8 +14,8 @@ class EditOcorrenciasRequest extends FormRequest
     public function rules()
     {
         return [
-            'especialidade_id' => 'required'
-            ,'tipo'             => 'required'
+            'especialidade_id'  => 'required'
+            ,'tipo_id'          => 'required'
             ,'data'             => 'required|date'
             ,'importancia'      => 'required'
             ,'resumo'           => 'required|min:10'

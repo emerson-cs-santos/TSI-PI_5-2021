@@ -107,6 +107,7 @@
                                         {
                                             $corStatus = "ForestGreen";
                                         }
+
                                     @endphp
 
                                     <div class="col-12 mt-2">
@@ -138,33 +139,8 @@
                             {{-- Ocorrencias do Caso inicio --}}
 
                             <div class="border border-dark rounded mb-3">
-
-                                @php
-                                    $corTipo = "Black";
-
-                                    if( $registro->tipo == 'Consulta' )
-                                    {
-                                        $corTipo = "LightSlateGrey";
-                                    }
-
-                                    if( $registro->tipo == 'Exame' )
-                                    {
-                                        $corTipo = "LightSkyBlue";
-                                    }
-
-                                    if( $registro->tipo == 'Pronto socorro' )
-                                    {
-                                        $corTipo = "red";
-                                    }
-
-                                    if( $registro->tipo == 'Cirurgia' )
-                                    {
-                                        $corTipo = "GoldenRod";
-                                    }
-                                @endphp
-
                                 <div class="col-12 mt-3">
-                                    <span> <strong> Tipo:</strong> <span style="color: {{$corTipo}};">{{$registro->tipo}}</span> </span>
+                                    <span> <strong> Tipo:</strong> <span style="color: {{$registro->cor}};">{{$registro->tipo}}</span> </span>
                                 </div>
 
                                 @php
@@ -179,6 +155,7 @@
                                     {
                                         $corImportancia = "MediumBlue";
                                     }
+
                                 @endphp
 
                                 <div class="col-12 mt-3">

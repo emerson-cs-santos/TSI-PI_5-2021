@@ -46,12 +46,11 @@
                                                     <span class="h5">Coloque aqui informações rápidas e resumidas da ocorrência.</span>
 
                                                     <div class="form-group mt-3">
-                                                        <label for="tipo">Tipo*</label>
-                                                        <select name="tipo" class="form-control" id="tipo" >
-                                                            <option value="Consulta"        @if( old('tipo') == 'Consulta')         selected @endif >Consulta</option>
-                                                            <option value="Exame"           @if( old('tipo') == 'Exame')            selected @endif >Exame</option>
-                                                            <option value="Pronto socorro"  @if( old('tipo') == 'Pronto socorro')   selected @endif >Pronto socorro</option>
-                                                            <option value="Cirurgia"        @if( old('tipo') == 'CuraCirurgiado')   selected @endif >Cirurgia</option>
+                                                        <label for="tipo_id">Tipo*</label>
+                                                        <select name="tipo_id" class="form-control" id="tipo_id" >
+                                                            @foreach($tipos as $tipo)
+                                                                <option style="color: {{$tipo->color}}" value="{{$tipo->id}}" @if( old('tipo_id') == $tipo->id ) selected @endif>{{$tipo->name}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
 

@@ -60,3 +60,4 @@ class OcorrenciasExcluirTest extends TestCase
 
         $this->assertTrue( $result );
     }
+}

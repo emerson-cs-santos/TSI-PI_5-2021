@@ -135,7 +135,7 @@
                                                             <td>{{ $DataOcorrencia}}</td>
 
                                                             <td>{{$registro->especialidade}}</td>
-                                                            <td>{{$registro->tipo}}</td>
+                                                            <td style="color: {{$registro->cor}}" class="font-weight-bold">{{$registro->tipo}}</td>
                                                             <td>{{$registro->importancia}}</td>
                                                             <td>{{$registro->arquivos()->count()}}</td>
                                                         </tr>

@@ -186,33 +186,8 @@
                                         {{-- Ocorrencias do Caso inicio --}}
 
                                         <div class="border border-dark rounded mb-3">
-
-                                            @php
-                                                $corTipo = "text-dark";
-
-                                                if( $registro->tipo == 'Consulta' )
-                                                {
-                                                    $corTipo = "text-secondary";
-                                                }
-
-                                                if( $registro->tipo == 'Exame' )
-                                                {
-                                                    $corTipo = "text-info";
-                                                }
-
-                                                if( $registro->tipo == 'Pronto socorro' )
-                                                {
-                                                    $corTipo = "text-danger";
-                                                }
-
-                                                if( $registro->tipo == 'Cirurgia' )
-                                                {
-                                                    $corTipo = "text-warning";
-                                                }
-                                            @endphp
-
                                             <div class="col-12 mt-3">
-                                                <span class="h5"> <strong> Tipo:</strong> <span class="{{$corTipo}} font-weight-bold">{{$registro->tipo}}</span> </span>
+                                                <span class="h5"> <strong> Tipo:</strong> <span style="color: {{$registro->cor}};" class="font-weight-bold">{{$registro->tipo}}</span> </span>
                                             </div>
 
                                             @php

@@ -10,6 +10,7 @@ use App\Http\Controllers\CasosController;
 use App\Http\Controllers\OcorrenciasController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\RedeSocialLoginController;
+use App\Http\Controllers\TiposController;
 
 // Login com redes sociais
 Route::get('login/{provider}',          [RedeSocialLoginController::class, 'redirectToProvider'])->name('login.rede.social');
@@ -85,6 +86,12 @@ Route::get('login/{provider}/callback', [RedeSocialLoginController::class, 'hand
         // Especialidades
         Route::resource('Especialidades',                       EspecialidadesController::class);
         Route::get('trashed-Especialidades',                    [EspecialidadesController::class, 'trashed' ] )     ->name('trashed-Especialidades.index');
-        Route::put('restore-Especialidades/{especialidade}',   [EspecialidadesController::class, 'restore' ] )      ->name('restore-Especialidades.update');
+        Route::put('restore-Especialidades/{especialidade}',    [EspecialidadesController::class, 'restore' ] )     ->name('restore-Especialidades.update');
         Route::any('buscar-Especialidades',                     [EspecialidadesController::class, 'buscar' ] )      ->name('buscar-Especialidades');
+
+        // Tipos
+        Route::resource('Tipos',                        TiposController::class);
+        Route::get('trashed-Tipos',                    [TiposController::class, 'trashed' ] )     ->name('trashed-Tipos.index');
+        Route::put('restore-Tipos/{especialidade}',    [TiposController::class, 'restore' ] )     ->name('restore-Tipos.update');
+        Route::any('buscar-Tipos',                     [TiposController::class, 'buscar' ] )      ->name('buscar-Tipos');
     });

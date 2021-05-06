@@ -96,7 +96,7 @@
                                                     @if ( $ocorrencia->caso_id == $casoId and $ocorrencia->user_id == Auth::user()->id)
 
                                                         <tr>
-                                                            <td>{{$ocorrencia->tipo}}</td>
+                                                            <td style="color: {{$ocorrencia->cor}}" class="font-weight-bold">{{$ocorrencia->tipo}}</td>
 
                                                             @php
                                                                 $date = DateTime::createFromFormat('Y-m-d H:i:s', $ocorrencia->data );
@@ -113,8 +113,6 @@
                                                                 <td>
                                                                     <a href="{{ route( 'Ocorrencias.show', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id] ) }}" class="btn btn-xs btn-primary"><i class="fas fa-eye"></i> Visualizar</a>
                                                                 </td>
-
-
 
                                                                 <td>
                                                                     <a href="{{ route('Ocorrencias.edit', ['caso'=>$casoId,'ocorrencia'=>$ocorrencia->id] ) }}" class="btn btn-xs btn-warning"> <i class="fas fa-edit"></i> Editar</a>
