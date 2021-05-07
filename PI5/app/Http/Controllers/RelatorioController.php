@@ -68,7 +68,7 @@ class RelatorioController extends Controller
                 ->where ('casos.nome', 'LIKE', '%' . $buscar . '%' )
                 ->orWhere ( 'ocorrencias.resumo', 'LIKE', '%' . $buscar . '%' )
                 ->orWhere ( 'especialidades.name', 'LIKE', '%' . $buscar . '%' )
-                ->orWhere ( 'ocorrencias.tipo', 'LIKE', '%' . $buscar . '%' )
+                ->orWhere ( 'tipos.name', 'LIKE', '%' . $buscar . '%' )
                 ->orWhere ( 'ocorrencias.importancia', 'LIKE', '%' . $buscar . '%' )
                 ->orderByDesc('casos.id')
                 ->orderByDesc('ocorrencias.id')
