@@ -19,6 +19,7 @@ class EditOcorrenciasRequest extends FormRequest
             ,'data'             => 'required|date'
             ,'importancia'      => 'required'
             ,'resumo'           => 'required|min:10'
+            ,'arquivo.*'        => 'max:2048'
         ];
     }
 }
