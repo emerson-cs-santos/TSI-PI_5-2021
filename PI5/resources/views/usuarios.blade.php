@@ -62,7 +62,7 @@
                                                     <td>{{$usuario->id}}</td>
                                                     <td>{{$usuario->name}}</td>
                                                     <td>{{$usuario->email}}</td>
-                                                    <td>{{$usuario->type == 'admin' ? ' Administrador' : 'Padrão' }}</td>
+                                                    <td>{{$usuario->type }}</td>
                                                     <td>{{ $usuario->premium == 'sim' ? ' Sim' : 'Não' }}</td>
                                                     <td>{{$usuario->casos()->count()}}</td>
 
