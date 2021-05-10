@@ -355,8 +355,8 @@
                     <tr>
                       <td>
                         <p>Sua conta e casos médicos foram excluídos de nosso sistema!</p>
-                        <p>Sinto muito, muito por você não querer utilizar mais nosso site, mas saiba que estaremos aqui se precisar utilizar novamente, mas será preciso criar outro usuário ok?</p>
-                        <p>Se não foi você que pediu essa ação, entre em contato conosco imediatamente</p>
+                        <p>Sentimos muito por você não querer utilizar mais nosso site, mas saiba que estaremos aqui se precisar utilizar novamente, mas será preciso criar outro usuário ok?</p>
+                        <p>Se não foi você que pediu essa ação, entre em contato conosco imediatamente!</p>
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>
                             <tr>
