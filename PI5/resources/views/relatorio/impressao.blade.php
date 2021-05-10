@@ -179,7 +179,7 @@
                                             </div>
 
                                             <div class="col-12 mt-3">
-                                                <span class="h4 font-weight-bold"> Ocorrencias: </span>
+                                                <span class="h4 font-weight-bold"> Ocorrências: </span>
                                             </div>
                                         @endif
 
