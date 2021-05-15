@@ -203,7 +203,8 @@ class UsersController extends Controller
             // Premium
             if ( !empty($premium) and $premium !== 'todos' )
             {
-                $users = $users->where('users.premium', $premium);
+
+                $users = $users->where('users.premium', $premium == 'Sim' ? 'sim' : 'nao');
             }
 
             // Email
