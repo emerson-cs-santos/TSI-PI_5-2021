@@ -17,7 +17,7 @@ class TiposController extends Controller
 
     public function indexBanco()
     {
-        $Tipos = Tipo::selectRaw('tipos.*')->orderByDesc('id')->paginate(5);
+        $Tipos = Tipo::selectRaw('tipos.*')->orderByDesc('id')->get();
         return $Tipos;
     }
 
@@ -42,14 +42,14 @@ class TiposController extends Controller
     {
         $tipo = Tipo::withTrashed()->where('id', $id)->firstOrFail();
 
-        return view('Tipos.show')->with('tipo', $tipo);
+        return view('tipos.show')->with('tipo', $tipo);
     }
 
     public function edit($id)
     {
         $tipo = Tipo::withTrashed()->where('id', $id)->firstOrFail();
 
-        return view('Tipos.edit')->with('tipo', $tipo);
+        return view('tipos.edit')->with('tipo', $tipo);
     }
 
     public function update(EditTiposRequest $request, $id)
@@ -94,7 +94,7 @@ class TiposController extends Controller
 
     public function trashed()
     {
-        $tipos = Tipo::selectRaw('tipos.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
+        $tipos = Tipo::selectRaw('tipos.*')->onlyTrashed()->orderByDesc('id')->get();
         return view('tipos.index', ['tipos' => $tipos]);
     }
 
@@ -106,36 +106,78 @@ class TiposController extends Controller
         return redirect()->back();
     }
 
+    public function buscarTrashed(Request $request)
+    {
+        $codigo = $request->input('codigo');
+        $nome   = $request->input('nome');
+
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres ou joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
+
+        // Definindo campos e joins e wheres da select que são fixas
+        $tipos = Tipo::selectRaw('tipos.*')->onlyTrashed();
+
+        // Definindo Wheres
+            // Código
+            if ( !empty($codigo) )
+            {
+                $tipos = $tipos->where('tipos.id', 'LIKE', '%' . $codigo . '%');
+            }
+
+            // Nome
+            if ( !empty($nome) )
+            {
+                $tipos = $tipos->where('tipos.name', 'LIKE', '%' . $nome . '%');
+            }
+
+        // Definindo ordem
+        $tipos = $tipos->orderBy('name');
+
+        // Após definir todos os joins, where etc, executa a select
+        $tipos = $tipos->get();
+
+        // Retornar View com registros e buscas aplicadas
+        return view('tipos.index')
+        ->with('tipos', $tipos )
+        ->with('codigo_Buscado',$codigo)
+        ->with( ['nome_Buscado' => $nome] );
+    }
+
     public function buscar(Request $request)
     {
-        $buscar = $request->input('busca');
+        $codigo = $request->input('codigo');
+        $nome   = $request->input('nome');
 
-        if($buscar != "")
-        {
-            $tipos = Tipo::selectRaw('tipos.*')
-            ->where ( 'tipos.name', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'tipos.id', 'LIKE', '%' . $buscar . '%' )
-            ->orderBy('name')
-            ->paginate(5)
-            ->setPath ( '' );
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres ou joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
 
-            $pagination = $tipos->appends ( array ('busca' => $request->input('busca')  ) );
+        // Definindo campos e joins e wheres da select que são fixas
+        $tipos = Tipo::selectRaw('tipos.*');
 
-            return view('tipos.index')
-            ->with('tipos',$tipos )->withQuery ( $buscar )
-            ->with('busca',$buscar);
-        }
-        else
-        {
-            $tipos = Tipo::selectRaw('tipos.*')
-            ->orderBy('name')
-            ->paginate(5)
-            ->setPath ( '' );
+        // Definindo Wheres
+            // Código
+            if ( !empty($codigo) )
+            {
+                $tipos = $tipos->where('tipos.id', 'LIKE', '%' . $codigo . '%');
+            }
 
-            return view('tipos.index')
-            ->with('tipos', $tipos )
-            ->with('busca','');
-        }
+            // Nome
+            if ( !empty($nome) )
+            {
+                $tipos = $tipos->where('tipos.name', 'LIKE', '%' . $nome . '%');
+            }
+
+        // Definindo ordem
+        $tipos = $tipos->orderBy('name');
+
+        // Após definir todos os joins, where etc, executa a select
+        $tipos = $tipos->get();
+
+        // Retornar View com registros e buscas aplicadas
+        return view('tipos.index')
+        ->with('tipos', $tipos )
+        ->with('codigo_Buscado',$codigo)
+        ->with( ['nome_Buscado' => $nome] );
     }
 
 }

@@ -5,9 +5,11 @@ use App\Models\Ocorrencia;
 use App\Models\Caso;
 use App\Models\Especialidade;
 use App\Models\User;
-use App\Models\Arquivo;
+use App\Models\arquivo;
+use App\Models\Tipo;
 use ZipArchive;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
@@ -16,6 +18,11 @@ use Mail;
 
 class RelatorioController extends Controller
 {
+    function formatarData( string $Data ): string
+    {
+        return date($Data);
+    }
+
     public function relatorio()
     {
         $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
@@ -30,138 +37,117 @@ class RelatorioController extends Controller
 
         return view('relatorio.index', ['registros' => $registros])
         ->with('buscarTipo','simples')
-        ->with('busca', '')
-        ->with('buscarDataInicial','')
-        ->with('buscarDataFinal','');
+        ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('tipos', Tipo::orderBy('name')->get())
+        ->with( ['tipo_idBuscado' => 'todos'] )
+        ->with( ['importancia_Buscado' => 'todos'] )
+        ->with( ['especialidade_idBuscado' => 'todos'] )
+        ->with( ['resumo_Buscado' => ''] )
+        ->with( ['caso_Buscado' => ''] )
+        ->with( ['status_Buscado' => 'todos'] );
     }
 
     public function relatorioBuscar( Request $request )
     {
         $buscarTipo         = $request->input('tipo');
-        $buscar             = $request->input('busca');
+        $tipo_id            = $request->input('tipo_id');
+        $importancia        = $request->input('importancia');
+        $especialidade_id   = $request->input('especialidade_id');
+        $caso               = $request->input('caso');
+        $status             = $request->input('status');
+        $resumo             = $request->input('resumo');
         $buscarDataInicial  = $request->input('dataInicial');
         $buscarDataFinal    = $request->input('dataFinal');
 
-        $buscaTotal = $buscar .  $buscarDataInicial . $buscarDataFinal;
+        // Definindo campos e joins
+        $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
+        ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+        ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
+        ->join('casos', 'casos.id', 'ocorrencias.caso_id');
 
-        $buscaPorData = $buscarDataInicial . $buscarDataFinal;
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres ou joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
 
-        if( empty($buscarDataInicial) )
-        {
-            $buscarDataInicial = "1";
-        }
+        // Definindo Wheres
+            // Usuário
+            $registros = $registros->where('ocorrencias.user_id', '=', Auth::user()->id );
 
-        if( empty($buscarDataFinal) )
-        {
-            $buscarDataFinal = '3000-01-01 00:00:00';
-        }
-
-        if($buscaTotal != "")
-        {
-            if ( empty($buscaPorData) )
+            // Tipo da ocorrência
+            if ( !empty($tipo_id) and $tipo_id !== 'todos' )
             {
-                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
-                ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-                ->join('casos', 'casos.id', 'ocorrencias.caso_id')
-                ->where('ocorrencias.user_id', '=', Auth::user()->id )
-                ->where ('casos.nome', 'LIKE', '%' . $buscar . '%' )
-                ->orWhere ( 'ocorrencias.resumo', 'LIKE', '%' . $buscar . '%' )
-                ->orWhere ( 'especialidades.name', 'LIKE', '%' . $buscar . '%' )
-                ->orWhere ( 'tipos.name', 'LIKE', '%' . $buscar . '%' )
-                ->orWhere ( 'ocorrencias.importancia', 'LIKE', '%' . $buscar . '%' )
-                ->orderByDesc('casos.id')
-                ->orderByDesc('ocorrencias.id')
-                ->get();
-
-                return view('relatorio.index')
-                ->with('registros',$registros )
-                ->with('buscarTipo','completo')
-                ->with('busca', $buscar)
-                ->with('buscarDataInicial','')
-                ->with('buscarDataFinal','');
-            }
-            else
-            {
-                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
-                ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-                ->join('casos', 'casos.id', 'ocorrencias.caso_id')
-                ->where('ocorrencias.user_id', '=', Auth::user()->id )
-                ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
-                ->whereDate('ocorrencias.data','<=', $buscarDataFinal)
-                ->orderByDesc('casos.id')
-                ->orderByDesc('ocorrencias.id')
-                ->get();
-
-                return view('relatorio.index')
-                ->with('registros',$registros )
-                ->with('buscarTipo','completo')
-                ->with('busca', '')
-                ->with('buscarDataInicial',$buscarDataInicial)
-                ->with('buscarDataFinal',$buscarDataFinal);
+                $registros = $registros->where('ocorrencias.tipo_id', $tipo_id);
             }
 
-        }
-        else
+            // Relevância da ocorrência
+            if ( !empty($importancia) and $importancia !== 'todos' )
+            {
+                $registros = $registros->where('ocorrencias.importancia', $importancia);
+            }
+
+            // Especialidade da ocorrência
+            if ( !empty($especialidade_id) and $especialidade_id !== 'todos'  )
+            {
+                $registros = $registros->where('ocorrencias.especialidade_id', $especialidade_id);
+            }
+
+            // Nome do Caso
+            if ( !empty($caso) )
+            {
+                $registros = $registros->where('casos.nome', 'LIKE', '%' . $caso . '%');
+            }
+
+            // Status do Caso
+            if ( !empty($status) and $status !== 'todos' )
+            {
+                $registros = $registros->where('casos.status', $status);
+            }
+
+            // Resumo da ocorrência
+            if ( !empty($resumo) )
+            {
+                $registros = $registros->where('ocorrencias.resumo', 'LIKE', '%' . $resumo . '%');
+            }
+
+            // Data inicial da ocorrência
+            if ( !empty($buscarDataInicial) )
+            {
+                $registros = $registros->whereDate('ocorrencias.data','>=', $this->formatarData( $buscarDataInicial ) );
+            }
+
+            // Data final da ocorrência
+            if ( !empty($buscarDataFinal) )
+            {
+                $registros = $registros->whereDate('ocorrencias.data','<=', $this->formatarData( $buscarDataFinal ) );
+            }
+
+        // Definindo ordem
+        $registros = $registros->orderByDesc('casos.id') ->orderByDesc('ocorrencias.id');
+
+        // Modo simples apenas carrega os 5 primeiros registros
+        if ( $buscarTipo == 'simples' )
         {
-            if( $buscarTipo == 'simples' )
-            {
-                $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
-                ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-                ->join('casos', 'casos.id', 'ocorrencias.caso_id')
-                ->where('ocorrencias.user_id', '=', Auth::user()->id )
-                ->orderByDesc('casos.id')
-                ->orderByDesc('ocorrencias.id')
-                ->take(5)
-                ->get();
-
-                return view('relatorio.index', ['registros' => $registros])
-                ->with('buscarTipo','simples')
-                ->with('busca','')
-                ->with('buscarDataInicial','')
-                ->with('buscarDataFinal','');
-            }
-            else
-            {
-                if( $buscarTipo == 'resumido' )
-                {
-                    $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
-                    ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-                    ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-                    ->join('casos', 'casos.id', 'ocorrencias.caso_id')
-                    ->where('ocorrencias.user_id', '=', Auth::user()->id )
-                    ->where('ocorrencias.importancia', '=', 'Importante' )
-                    ->orderByDesc('casos.id')
-                    ->orderByDesc('ocorrencias.id')
-                    ->get();
-
-                    return view('relatorio.index', ['registros' => $registros])
-                    ->with('buscarTipo','resumido')
-                    ->with('busca','')
-                    ->with('buscarDataInicial','')
-                    ->with('buscarDataFinal','');
-                }
-                else
-                {
-                    $registros = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, casos.nome as caso, casos.desc as casoDesc, casos.status as status, casos.medicamentos as medicamentos, tipos.name as tipo, tipos.color as cor')
-                    ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-                    ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-                    ->join('casos', 'casos.id', 'ocorrencias.caso_id')
-                    ->where('ocorrencias.user_id', '=', Auth::user()->id )
-                    ->orderByDesc('casos.id')
-                    ->orderByDesc('ocorrencias.id')
-                    ->get();
-
-                    return view('relatorio.index', ['registros' => $registros])
-                    ->with('buscarTipo','completo')
-                    ->with('busca','')
-                    ->with('buscarDataInicial','')
-                    ->with('buscarDataFinal','');
-                }
-            }
+            $registros = $registros->take(5);
         }
+
+        // Após definir todos os joins, where etc, executa a select
+       // DB::enableQueryLog();
+        $registros = $registros->get();
+      //  $quries = DB::getQueryLog();
+       // dd($quries);
+
+       // Retornar View com registros e buscas aplicadas
+        return view('relatorio.index', ['registros' => $registros])
+        ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('tipos', Tipo::orderBy('name')->get())
+        ->with('buscarTipo',$buscarTipo)
+        ->with( ['tipo_idBuscado' => $tipo_id] )
+        ->with( ['importancia_Buscado' => $importancia] )
+        ->with( ['especialidade_idBuscado' => $especialidade_id] )
+        ->with( ['resumo_Buscado' => $resumo] )
+        ->with( ['caso_Buscado' => $caso] )
+        ->with( ['status_Buscado' => $status] )
+        ->with('buscarDataInicial',$buscarDataInicial)
+        ->with('buscarDataFinal',$buscarDataFinal);
     }
 
     public function relatorioImpressao( Request $request )
@@ -173,7 +159,6 @@ class RelatorioController extends Controller
 
         return view('relatorio.impressao')->with('registros', $registros )->with('idade', $idade);
     }
-
 
     public function getfileTodos( Request $request )
     {
@@ -200,7 +185,7 @@ class RelatorioController extends Controller
         $ocorrenciasId = array_unique($ocorrenciasId);
 
         // Carregando arquivos
-        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        $arquivos = arquivo::where('user_id', '=', Auth::user()->id )
         ->whereIn('caso_id', $casosId)
         ->whereIn('ocorrencia_id', $ocorrenciasId)
         ->get();

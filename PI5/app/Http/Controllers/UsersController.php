@@ -12,12 +12,14 @@ class UsersController extends Controller
     {
         $users = $this->indexBanco();
 
-        return view('usuarios', ['usuarios' => $users]);
+        return view('usuarios', ['usuarios' => $users])
+        ->with('nivel_Buscado','todos')
+        ->with('premium_Buscado','todos');
     }
 
     public function indexBanco()
     {
-        $users = User::selectRaw('users.*')->orderByDesc('id')->paginate(5);
+        $users = User::selectRaw('users.*')->orderBy('name')->get();
 
         return $users;
     }
@@ -58,12 +60,14 @@ class UsersController extends Controller
     public function trashed()
     {
         $users = $this->trashedBanco();
-        return view('usuarios', ['usuarios' => $users]);
+        return view('usuarios', ['usuarios' => $users])
+        ->with('nivel_Buscado','todos')
+        ->with('premium_Buscado','todos');
     }
 
     public function trashedBanco()
     {
-        $users = User::selectRaw('users.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
+        $users = User::selectRaw('users.*')->onlyTrashed()->orderBy('name')->get();
         return $users;
     }
 
@@ -80,40 +84,148 @@ class UsersController extends Controller
         $user->restore();
     }
 
+    public function buscarTrashed(Request $request)
+    {
+        $codigo     = $request->input('codigo');
+        $nome       = $request->input('nome');
+        $nivel      = $request->input('nivel');
+        $premium    = $request->input('premium');
+        $email      = $request->input('email');
+
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres oi joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
+
+        // Definindo campos e joins
+        $users = User::selectRaw('users.*')->onlyTrashed();
+
+        // Definindo Wheres
+            // Código
+            if ( !empty($codigo) )
+            {
+                $users = $users->where('users.id', $codigo);
+            }
+
+            // Nome
+            if ( !empty($nome) )
+            {
+                $users = $users->where('users.name', 'LIKE', '%' . $nome . '%');
+            }
+
+            // Nível
+            if ( !empty($nivel) and $nivel !== 'todos' )
+            {
+                $nivelInterno = '';
+
+                if ( $nivel == 'adm' )
+                {
+                    $nivelInterno = 'admin';
+                }
+                else
+                {
+                    $nivelInterno = 'default';
+                }
+
+                $users = $users->where('users.type', $nivelInterno);
+            }
+
+            // Premium
+            if ( !empty($premium) and $premium !== 'todos' )
+            {
+                $users = $users->where('users.premium', $premium);
+            }
+
+            // Email
+            if ( !empty($email) )
+            {
+                $users = $users->where('users.name', 'LIKE', '%' . $email . '%');
+            }
+
+        // Definindo ordem
+        $users = $users->orderBy('name');
+
+        // Após definir todos os joins, where etc, executa a select
+        $users = $users->get();
+
+        // Retornar View com registros e buscas aplicadas
+        return view('usuarios')
+        ->with('usuarios', $users )
+        ->with('codigo_Buscado',$codigo)
+        ->with('nome_Buscado',$nome)
+        ->with('nivel_Buscado',$nivel)
+        ->with('premium_Buscado',$premium )
+        ->with('email_Buscado',$email);
+    }
 
     public function buscar(Request $request)
     {
-        $buscar = $request->input('busca');
+        $codigo     = $request->input('codigo');
+        $nome       = $request->input('nome');
+        $nivel      = $request->input('nivel');
+        $premium    = $request->input('premium');
+        $email      = $request->input('email');
 
-        if($buscar != "")
-        {
-            $users = User::selectRaw('users.*')
-            ->where ( 'users.name', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'users.id', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'users.email', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'users.type', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'users.premium', 'LIKE', '%' . $buscar . '%' )
-            ->orderBy('name')
-            ->paginate(5)
-            ->setPath ( '' );
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres ou joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
 
-            $pagination = $users->appends ( array ('busca' => $request->input('busca')  ) );
+        // Definindo campos e joins
+        $users = User::selectRaw('users.*');
 
-            return view('usuarios')
-            ->with('usuarios',$users )->withQuery ( $buscar )
-            ->with('busca',$buscar);
-        }
-        else
-        {
-            $users = User::selectRaw('users.*')
-            ->orderBy('name')
-            ->paginate(5)
-            ->setPath ( '' );
+        // Definindo Wheres
+            // Código
+            if ( !empty($codigo) )
+            {
+                $users = $users->where('users.id', $codigo);
+            }
 
-            return view('usuarios')
-            ->with('usuarios', $users )
-            ->with('busca','');
-        }
+            // Nome
+            if ( !empty($nome) )
+            {
+                $users = $users->where('users.name', 'LIKE', '%' . $nome . '%');
+            }
+
+            // Nível
+            if ( !empty($nivel) and $nivel !== 'todos' )
+            {
+                $nivelInterno = '';
+
+                if ( $nivel == 'adm' )
+                {
+                    $nivelInterno = 'admin';
+                }
+                else
+                {
+                    $nivelInterno = 'default';
+                }
+
+                $users = $users->where('users.type', $nivelInterno);
+            }
+
+            // Premium
+            if ( !empty($premium) and $premium !== 'todos' )
+            {
+                $users = $users->where('users.premium', $premium);
+            }
+
+            // Email
+            if ( !empty($email) )
+            {
+                $users = $users->where('users.name', 'LIKE', '%' . $email . '%');
+            }
+
+        // Definindo ordem
+        $users = $users->orderBy('name');
+
+        // Após definir todos os joins, where etc, executa a select
+        $users = $users->get();
+
+        // Retornar View com registros e buscas aplicadas
+        return view('usuarios')
+        ->with('usuarios', $users )
+        ->with('codigo_Buscado',$codigo)
+        ->with('nome_Buscado',$nome)
+        ->with('nivel_Buscado',$nivel)
+        ->with('premium_Buscado',$premium )
+        ->with('email_Buscado',$email);
     }
 
     // Mudar nível de acesso

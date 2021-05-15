@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Ocorrencia;
 use App\Models\Caso;
 use App\Models\Especialidade;
-use App\Models\Arquivo;
+use App\Models\arquivo;
 use App\Http\Requests\CreateOcorrenciasRequest;
 use App\Http\Requests\EditOcorrenciasRequest;
 use DateTime;
@@ -16,9 +16,18 @@ use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
 use App\Models\Tipo;
+use Illuminate\Support\Facades\DB;
 
 class OcorrenciasController extends Controller
 {
+    // Campos usados dentro do scopo da função de when das funções de busca
+    private $tipo           = '';
+    private $importancia    = '';
+    private $especialidade  = '';
+    private $resumo         = '';
+    private $DataInicial    = '';
+    private $DataFinal      = '';
+
     // Proteção para não colocar data maior que a data atual
     function validarData( String $Data): bool
     {
@@ -36,11 +45,19 @@ class OcorrenciasController extends Controller
         ->where('caso_id', '=', $casoId )
         ->where('user_id', '=', Auth::user()->id )
         ->orderByDesc('id')
-        ->paginate(5);
+        ->get();
 
         $caso = Caso::withTrashed()->where('id', $casoId)->firstOrFail();
 
-        return view('ocorrencias.index', ['ocorrencias' => $ocorrencias])->with( ['casoId' => $casoId] )->with( ['caso' => $caso->nome] );
+        return view('ocorrencias.index', ['ocorrencias' => $ocorrencias])
+        ->with( ['casoId' => $casoId] )
+        ->with( ['caso' => $caso->nome] )
+        ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('tipos', Tipo::orderBy('name')->get())
+        ->with( ['tipo_idBuscado' => 'todos'] )
+        ->with( ['importancia_Buscado' => 'todos'] )
+        ->with( ['especialidade_idBuscado' => 'todos'] )
+        ->with( ['resumo_Buscado' => ''] );
     }
 
     public function create( $casoId )
@@ -124,7 +141,7 @@ class OcorrenciasController extends Controller
     {
         $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->where('user_id', '=', Auth::user()->id )->firstOrFail();
 
-        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        $arquivos = arquivo::where('user_id', '=', Auth::user()->id )
         ->where('caso_id', $casoId)
         ->where('ocorrencia_id', $ocorrenciaId)
         ->get();
@@ -142,7 +159,7 @@ class OcorrenciasController extends Controller
     {
         $ocorrencia = Ocorrencia::withTrashed()->where('id', $ocorrenciaId)->where('caso_id', $casoId)->where('user_id', '=', Auth::user()->id )->firstOrFail();
 
-        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        $arquivos = arquivo::where('user_id', '=', Auth::user()->id )
         ->where('caso_id', $casoId)
         ->where('ocorrencia_id', $ocorrenciaId)
         ->get();
@@ -263,160 +280,145 @@ class OcorrenciasController extends Controller
         ->where('caso_id', '=', $casoId )
         ->where('user_id', '=', Auth::user()->id )
         ->orderByDesc('id')
-        ->paginate(5);
+        ->get();
 
         $caso = Caso::withTrashed()->where('id', $casoId)->firstOrFail();
 
-        return view('ocorrencias.index', ['ocorrencias' => $ocorrencias])->with( ['casoId' => $casoId] )->with( ['caso' => $caso->nome] );
+        return view('ocorrencias.index', ['ocorrencias' => $ocorrencias])
+        ->with( ['casoId' => $casoId] )
+        ->with( ['caso' => $caso->nome] )
+        ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('tipos', Tipo::orderBy('name')->get())
+        ->with( ['tipo_idBuscado' => 'todos'] )
+        ->with( ['importancia_Buscado' => 'todos'] )
+        ->with( ['especialidade_idBuscado' => 'todos'] )
+        ->with( ['resumo_Buscado' => ''] );
+    }
+
+    public function buscarTrashed(Request $request, $casoId)
+    {
+        $caso = Caso::withTrashed()->where('id', $casoId)->firstOrFail();
+
+        $tipo_id            = $request->input('tipo_id');
+        $importancia        = $request->input('importancia');
+        $especialidade_id   = $request->input('especialidade_id');
+        $resumo             = $request->input('resumo');
+        $buscarDataInicial  = $request->input('dataInicial');
+        $buscarDataFinal    = $request->input('dataFinal');
+
+     //   DB::enableQueryLog();
+
+        $this->tipo             = $tipo_id;
+        $this->importancia      = $importancia;
+        $this->especialidade    = $especialidade_id;
+        $this->resumo           = $resumo;
+        $this->DataInicial      = $buscarDataInicial;
+        $this->DataFinal        = $buscarDataFinal;
+
+        $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')->onlyTrashed()
+        ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+        ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
+        ->where('user_id', '=', Auth::user()->id )
+        ->where('caso_id', '=', $casoId )
+        ->when( !empty($tipo_id) and $tipo_id !== 'todos' , function ($query, $tipo_id) {
+            return $query->where('ocorrencias.tipo_id', $this->tipo);
+        })
+        ->when( !empty($importancia) and $importancia !== 'todos' , function ($query, $importancia) {
+            return $query->where('ocorrencias.importancia', $this->importancia);
+        })
+        ->when( !empty($especialidade_id) and $especialidade_id !== 'todos' , function ($query, $especialidade_id) {
+            return $query->where('ocorrencias.especialidade_id', $this->especialidade);
+        })
+        ->when( !empty($resumo), function ($query, $resumo) {
+            return $query->where('ocorrencias.resumo', 'LIKE', '%' . $this->resumo . '%');
+        })
+        ->when( !empty($buscarDataInicial), function ($query, $buscarDataInicial) {
+            return $query->whereDate('ocorrencias.data','>=', date($this->DataInicial));
+        })
+        ->when( !empty($buscarDataFinal), function ($query, $buscarDataFinal) {
+            return $query->whereDate('ocorrencias.data','<=', date($this->DataFinal));
+        })
+        ->orderByDesc('data')
+        ->get();
+
+       // $quries = DB::getQueryLog();
+      //  dd($quries);
+
+        return view('ocorrencias.index')
+        ->with('ocorrencias',$ocorrencias )
+        ->with( ['casoId' => $casoId] )
+        ->with( ['caso' => $caso->nome] )
+        ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('tipos', Tipo::orderBy('name')->get())
+        ->with( ['tipo_idBuscado' => $tipo_id] )
+        ->with( ['importancia_Buscado' => $importancia] )
+        ->with( ['especialidade_idBuscado' => $especialidade_id] )
+        ->with( ['resumo_Buscado' => $resumo] )
+        ->with('buscarDataInicial',$buscarDataInicial)
+        ->with('buscarDataFinal',$buscarDataFinal);
     }
 
     public function buscar(Request $request, $casoId)
     {
         $caso = Caso::withTrashed()->where('id', $casoId)->firstOrFail();
 
-        $buscar = $request->input('busca');
+        $tipo_id            = $request->input('tipo_id');
+        $importancia        = $request->input('importancia');
+        $especialidade_id   = $request->input('especialidade_id');
+        $resumo             = $request->input('resumo');
+        $buscarDataInicial  = $request->input('dataInicial');
+        $buscarDataFinal    = $request->input('dataFinal');
 
-        if($buscar != "")
-        {
-            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
-            ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-            ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-            ->where('user_id', '=', Auth::user()->id )
-            ->where('caso_id', '=', $casoId )
-            ->where ( 'tipos.name', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'ocorrencias.id', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'ocorrencias.importancia', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'especialidades.name', 'LIKE', '%' . $buscar . '%' )
-            ->orderByDesc('data')
-            ->paginate(5)
-            ->setPath ( '' );
+      //  DB::enableQueryLog();
 
-            $pagination = $ocorrencias->appends ( array ('busca' => $request->input('busca')  ) );
+        $this->tipo             = $tipo_id;
+        $this->importancia      = $importancia;
+        $this->especialidade    = $especialidade_id;
+        $this->resumo           = $resumo;
+        $this->DataInicial      = $buscarDataInicial;
+        $this->DataFinal        = $buscarDataFinal;
 
-            return view('ocorrencias.index')
-            ->with('ocorrencias',$ocorrencias )->withQuery ( $buscar )
-            ->with( ['casoId' => $casoId] )
-            ->with( ['caso' => $caso->nome] )
-            ->with('busca',$buscar);
+        $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
+        ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
+        ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
+        ->where('user_id', '=', Auth::user()->id )
+        ->where('caso_id', '=', $casoId )
+        ->when( !empty($tipo_id) and $tipo_id !== 'todos' , function ($query, $tipo_id) {
+            return $query->where('ocorrencias.tipo_id', $this->tipo);
+        })
+        ->when( !empty($importancia) and $importancia !== 'todos' , function ($query, $importancia) {
+            return $query->where('ocorrencias.importancia', $this->importancia);
+        })
+        ->when( !empty($especialidade_id) and $especialidade_id !== 'todos' , function ($query, $especialidade_id) {
+            return $query->where('ocorrencias.especialidade_id', $this->especialidade);
+        })
+        ->when( !empty($resumo), function ($query, $resumo) {
+            return $query->where('ocorrencias.resumo', 'LIKE', '%' . $this->resumo . '%');
+        })
+        ->when( !empty($buscarDataInicial), function ($query, $buscarDataInicial) {
+            return $query->whereDate('ocorrencias.data','>=', date($this->DataInicial));
+        })
+        ->when( !empty($buscarDataFinal), function ($query, $buscarDataFinal) {
+            return $query->whereDate('ocorrencias.data','<=', date($this->DataFinal));
+        })
+        ->orderByDesc('data')
+        ->get();
 
-        }
-        else
-        {
-            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
-            ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-            ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-            ->where('user_id', '=', Auth::user()->id )
-            ->where('caso_id', '=', $casoId )
-            ->orderByDesc('data')
-            ->paginate(5)
-            ->setPath ( '' );
+       // $quries = DB::getQueryLog();
+       // dd($quries);
 
-            return view('ocorrencias.index')
-            ->with('ocorrencias', $ocorrencias )
-            ->with( ['casoId' => $casoId] )
-            ->with( ['caso' => $caso->nome] )
-            ->with('busca','');
-        }
-    }
-
-
-    public function buscarData(Request $request, $casoId)
-    {
-        $caso = Caso::withTrashed()->where('id', $casoId)->firstOrFail();
-
-        $buscarDataInicial = $request->input('dataInicial');
-
-        $buscarDataFinal = $request->input('dataFinal');
-
-        if( $buscarDataInicial != "" or $buscarDataFinal != "" )
-        {
-            if( $buscarDataInicial != "" and $buscarDataFinal != "" )
-            {
-                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
-                ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-                ->where('user_id', '=', Auth::user()->id )
-                ->where('caso_id', '=', $casoId )
-                ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
-                ->whereDate('ocorrencias.data','<=', $buscarDataFinal)
-                ->orderByDesc('data')
-                ->paginate(30)
-                ->setPath ( '' );
-
-                $pagination = $ocorrencias->appends ( array ('buscarDataInicial' => $request->input('buscarDataInicial')  ) );
-                $pagination = $ocorrencias->appends ( array ('buscarDataFinal' => $request->input('buscarDataFinal')  ) );
-
-                return view('ocorrencias.index')
-                ->with('ocorrencias',$ocorrencias )->withQuery ( $buscarDataInicial )
-                ->with( ['casoId' => $casoId] )
-                ->with( ['caso' => $caso->nome] )
-                ->with('buscarDataInicial',$buscarDataInicial)
-                ->with('buscarDataFinal',$buscarDataFinal);
-            }
-
-            if( empty($buscarDataInicial) and $buscarDataFinal != "" )
-            {
-                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
-                ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-                ->where('user_id', '=', Auth::user()->id )
-                ->where('caso_id', '=', $casoId )
-                ->whereDate('ocorrencias.data','<=', $buscarDataFinal)
-                ->orderByDesc('data')
-                ->paginate(30)
-                ->setPath ( '' );
-
-                $pagination = $ocorrencias->appends ( array ('buscarDataFinal' => $request->input('buscarDataFinal')  ) );
-
-                return view('ocorrencias.index')
-                ->with('ocorrencias',$ocorrencias )->withQuery ( $buscarDataFinal )
-                ->with( ['casoId' => $casoId] )
-                ->with( ['caso' => $caso->nome] )
-                ->with('buscarDataInicial',$buscarDataInicial)
-                ->with('buscarDataFinal',$buscarDataFinal);
-            }
-
-            if( $buscarDataInicial != "" and empty($buscarDataFinal)  )
-            {
-                $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
-                ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-                ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-                ->where('user_id', '=', Auth::user()->id )
-                ->where('caso_id', '=', $casoId )
-                ->whereDate('ocorrencias.data','>=', $buscarDataInicial)
-                ->orderByDesc('data')
-                ->paginate(30)
-                ->setPath ( '' );
-
-                $pagination = $ocorrencias->appends ( array ('buscarDataInicial' => $request->input('buscarDataInicial')  ) );
-
-                return view('ocorrencias.index')
-                ->with('ocorrencias',$ocorrencias )->withQuery ( $buscarDataInicial )
-                ->with( ['casoId' => $casoId] )
-                ->with( ['caso' => $caso->nome] )
-                ->with('buscarDataInicial',$buscarDataInicial)
-                ->with('buscarDataFinal',$buscarDataFinal);
-            }
-
-        }
-        else
-        {
-            $ocorrencias = Ocorrencia::selectRaw('ocorrencias.*, especialidades.name as especialidade, tipos.name as tipo, tipos.color as cor')
-            ->join('especialidades', 'especialidades.id', 'ocorrencias.especialidade_id')
-            ->join('tipos', 'tipos.id', 'ocorrencias.tipo_id')
-            ->where('user_id', '=', Auth::user()->id )
-            ->where('caso_id', '=', $casoId )
-            ->orderByDesc('data')
-            ->paginate(30)
-            ->setPath ( '' );
-
-            return view('ocorrencias.index')
-            ->with('ocorrencias', $ocorrencias )
-            ->with( ['casoId' => $casoId] )
-            ->with( ['caso' => $caso->nome] )
-            ->with('buscarDataInicial','')
-            ->with('buscarDataFinal','');
-        }
+        return view('ocorrencias.index')
+        ->with('ocorrencias',$ocorrencias )
+        ->with( ['casoId' => $casoId] )
+        ->with( ['caso' => $caso->nome] )
+        ->with('especialidades', Especialidade::orderBy('name')->get() )
+        ->with('tipos', Tipo::orderBy('name')->get())
+        ->with( ['tipo_idBuscado' => $tipo_id] )
+        ->with( ['importancia_Buscado' => $importancia] )
+        ->with( ['especialidade_idBuscado' => $especialidade_id] )
+        ->with( ['resumo_Buscado' => $resumo] )
+        ->with('buscarDataInicial',$buscarDataInicial)
+        ->with('buscarDataFinal',$buscarDataFinal);
     }
 
     function storeFiles( $arquivos, int $casoId, int $ocorrenciaId )
@@ -436,7 +438,7 @@ class OcorrenciasController extends Controller
             $arquivo->move(public_path().'/files/', $name);
 
             // Salvar no banco
-            Arquivo::create([
+            arquivo::create([
                 'user_id'           => Auth::user()->id
                 ,'caso_id'          => $casoId
                 ,'ocorrencia_id'    => $ocorrenciaId
@@ -455,7 +457,9 @@ class OcorrenciasController extends Controller
             $extension = $arquivo->extension();
 
             // validar tipo,apenas aceitar pdf, doc e docx ou imagem
-            if ( $extension !== 'pdf' and $extension !== 'doc' and $extension !== 'docx' and !exif_imagetype($arquivo) )
+            // if ( $extension !== 'pdf' and $extension !== 'doc' and $extension !== 'docx' and !exif_imagetype($arquivo) )
+            // exif_imagetype deixei de usar, pois na hospedagem (heroku) a versão de PHP ainda não tinha essa função
+            if ( $extension !== 'pdf' and $extension !== 'doc' and $extension !== 'docx' and $extension !== 'png' and $extension !== 'jpg' and $extension !== 'jpeg' )
             {
               session()->flash('error', "Tipo do arquivo: $extension inválido, extensões aceitas: PDF, DOC, DOCX ou imagens." );
               $retorno = false;
@@ -473,7 +477,7 @@ class OcorrenciasController extends Controller
         //  return Response()->download($file, 'teste.jpg', $headers);
 
         // Validando se o arquivo pertence ao usuário, caso e ocorrencia
-        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        $arquivos = arquivo::where('user_id', '=', Auth::user()->id )
         ->where('caso_id', $casoId)
         ->where('ocorrencia_id', $ocorrenciaId)
         ->where('nome', $nomeArquivo )
@@ -501,7 +505,7 @@ class OcorrenciasController extends Controller
 
     public function getfileTodos( int $casoId, int $ocorrenciaId )
     {
-        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        $arquivos = arquivo::where('user_id', '=', Auth::user()->id )
         ->where('caso_id', $casoId)
         ->where('ocorrencia_id', $ocorrenciaId)
         ->get();
@@ -543,7 +547,7 @@ class OcorrenciasController extends Controller
     public function deletefile( int $casoId, int $ocorrenciaId, string $nomeArquivo )
     {
         // Validando se o arquivo pertence ao usuário, caso e ocorrencia
-        $arquivos = Arquivo::where('user_id', '=', Auth::user()->id )
+        $arquivos = arquivo::where('user_id', '=', Auth::user()->id )
         ->where('caso_id', $casoId)
         ->where('ocorrencia_id', $ocorrenciaId)
         ->where('nome', $nomeArquivo )

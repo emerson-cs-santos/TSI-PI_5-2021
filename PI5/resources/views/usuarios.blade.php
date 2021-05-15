@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-md-12 page-header">
                     <div class="page-pretitle">Usuários</div>
-                    <h2 class="page-title text-center"> {{ Request::path() == 'trashed-Users' ? 'Lixeira de Usuários' : 'Cadastro de Usuários' }} </h2>
+                    <h2 class="page-title text-center"> {{ Str::of( Request::path() )->contains( ['trashed-Users', 'buscar-Users-trashed'] ) ? 'Lixeira de Usuários' : 'Cadastro de Usuários' }} </h2>
                 </div>
             </div>
 
@@ -22,23 +22,77 @@
                             <div class="container">
                                 <div class="col-12">
 
-                                    @if( Request::path() !== 'trashed-Users')
+                                    @if( Str::of( Request::path() )->contains( ['trashed-Users', 'buscar-Users-trashed'] ) )
+                                        <form action="/buscar-Users-trashed" method="POST" role="search">
+                                    @else
                                         <form action="/buscar-Users" method="POST" role="search">
-                                        {{ csrf_field() }}
+                                    @endif
+                                            {{ csrf_field() }}
+
                                             <div class="row">
-                                                <div class="col-12 col-sm-12 col-md-11 mt-2">
-                                                    <input type="search" name="busca" class="form-control" placeholder="O que está buscando?"
-                                                        @if( isset($busca) )  value="{{$busca}}"  @endif >
+
+                                                <div class="form-group col-sm-12 col-md-3">
+                                                    <label for="codigo">Código:</label>
+                                                    <input type="number" name="codigo" id="codigo" class="form-control" placeholder="Buscar código"
+                                                        @if( isset($codigo_Buscado) )  value="{{$codigo_Buscado}}"  @endif >
                                                 </div>
 
-                                                <div class="col-12 col-sm-12 col-md-1 mt-2">
-                                                    <button type="submit" class="btn btn-secondary" data-placement="top" data-toggle="tooltip" title="Fazer busca">
-                                                        <span class="fa fa-search"></span>
-                                                    </button>
+                                                <div class="form-group col-sm-12 col-md-9">
+                                                    <label for="nome">Nome:</label>
+                                                    <input type="search" name="nome" id="nome" class="form-control" placeholder="Buscar nome"
+                                                        @if( isset($nome_Buscado) )  value="{{$nome_Buscado}}"  @endif >
                                                 </div>
+
                                             </div>
+
+                                            <div class="row">
+
+                                                <div class="form-group col-sm-12 col-md-6">
+                                                    <label for="nivel">Nível:</label>
+                                                    <select name="nivel" class="form-control" id="nivel" >
+                                                        <option value="padrao" @if ( $nivel_Buscado == 'padrao' ) selected @endif >Padrão</option>
+                                                        <option value="adm" @if ( $nivel_Buscado == 'adm' ) selected @endif >Administrador</option>
+                                                        <option value="todos" @if ( $nivel_Buscado == 'todos' ) selected @endif >Todos</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group col-sm-12 col-md-6">
+                                                    <label for="premium">Premium:</label>
+                                                    <select name="premium" class="form-control" id="premium" >
+                                                        <option value="Sim" @if ( $premium_Buscado == 'Sim' ) selected @endif >Sim</option>
+                                                        <option value="Não" @if ( $premium_Buscado == 'Não' ) selected @endif >Não</option>
+                                                        <option value="todos" @if ( $premium_Buscado == 'todos' ) selected @endif >Todos</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="form-group col-sm-12 col-md-12">
+                                                    <label for="email">E-mail:</label>
+                                                    <input type="search" name="email" id="email" class="form-control" placeholder="Buscar e-mail"
+                                                        @if( isset($email_Buscado) )  value="{{$email_Buscado}}"  @endif >
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-sm-12 col-md-12 d-flex justify-content-center mt-1">
+                                                <button type="submit" class="btn btn-secondary" data-placement="top" data-toggle="tooltip" title="Fazer busca">
+                                                    <span class="fa fa-search" data-placement="top" data-toggle="tooltip" title="Fazer busca"></span>
+                                                </button>
+                                            </div>
+
                                         </form>
-                                    @endif
+
+                                        <div class="col-12 mt-3 d-flex justify-content-center mb-3">
+                                            @if( Str::of( Request::path() )->contains( ['trashed-Users', 'buscar-Users-trashed'] ) )
+                                                <a href="{{route('Users.index')}}" class='btn btn-info'> <i class="fas fa-arrow-left"></i> Voltar ao cadastro</a>
+                                            @else
+                                                <a href="{{ route('trashed-Users.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar registros excluídos"><i class="fas fa-recycle"></i> Lixeira</a>
+                                            @endif
+                                        </div>
+
 
                                     {{-- Tabela inicio --}}
                                     <div class="table-responsive mt-3">
@@ -62,8 +116,8 @@
                                                     <td>{{$usuario->id}}</td>
                                                     <td>{{$usuario->name}}</td>
                                                     <td>{{$usuario->email}}</td>
-                                                    <td>{{$usuario->type }}</td>
-                                                    <td>{{ $usuario->premium == 'sim' ? ' Sim' : 'Não' }}</td>
+                                                    <td>{{$usuario->type == 'admin' ? 'Administrador' : 'Padrão'  }}</td>
+                                                    <td>{{$usuario->premium == 'sim' ? ' Sim' : 'Não' }}</td>
                                                     <td>{{$usuario->casos()->count()}}</td>
 
                                                     @if(!$usuario->trashed())
@@ -114,46 +168,6 @@
                                         </table>
                                     </div>
                                     {{-- Tabela fim --}}
-
-                                    <!---Pagination-->
-                                    <div class="pagination justify-content-center mt-3">
-
-                                        @if ($usuarios->hasPages())
-                                            <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
-                                                {{-- Previous Page Link --}}
-                                                @if ($usuarios->onFirstPage())
-                                                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">
-                                                        {!! __('pagination.previous') !!}
-                                                    </span>
-                                                @else
-                                                    <a href="{{ $usuarios->previousPageUrl() }}" rel="prev" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
-                                                        {!! __('pagination.previous') !!}
-                                                    </a>
-                                                @endif
-
-                                                {{-- Next Page Link --}}
-                                                @if ($usuarios->hasMorePages())
-                                                    <a href="{{ $usuarios->nextPageUrl() }}" rel="next" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
-                                                        {!! __('pagination.next') !!}
-                                                    </a>
-                                                @else
-                                                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">
-                                                        {!! __('pagination.next') !!}
-                                                    </span>
-                                                @endif
-                                            </nav>
-                                        @endif
-
-                                    </div>
-                                    <!---End of Pagination-->
-
-                                    <div class="col-12 mt-3 d-flex justify-content-center mb-3">
-                                        @if( Request::path() == 'trashed-Users' )
-                                            <a href="{{route('Users.index')}}" class='btn btn-info'> <i class="fas fa-arrow-left"></i> Voltar ao cadastro</a>
-                                        @else
-                                            <a href="{{ route('trashed-Users.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar registros excluídos"><i class="fas fa-recycle"></i> Lixeira</a>
-                                        @endif
-                                    </div>
 
                                 </div>
                             </div>

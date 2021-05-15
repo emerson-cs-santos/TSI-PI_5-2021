@@ -107,7 +107,7 @@
             <p>Os serviços oferecidos podem, a qualquer tempo e unilateralmente, e sem qualquer aviso prévio, ser deixados de fornecer, alterados em suas características, bem como restringido para o uso ou acesso. </p>
 
             <h4 class="font-weight-bold">15. Da política de privacidade</h4>
-            <p>Alémdo presente Termo, o usuário deverá consentir com as disposições contidas na respectiva Política de Privacidade a ser apresentada a todos os interessados dentro da interface da plataforma. </p>
+            <p>Além do presente Termo, o usuário deverá consentir com as disposições contidas na respectiva Política de Privacidade a ser apresentada a todos os interessados dentro da interface da plataforma. </p>
 
             <h4 class="font-weight-bold">16. Do foro</h4>
             <p>Para a solução de controvérsias decorrentes do presente instrumento será aplicado integralmente o Direito brasileiro. Os eventuais litígios deverão ser apresentados no foro da comarca em que se encontra a sede da empresa.</p>

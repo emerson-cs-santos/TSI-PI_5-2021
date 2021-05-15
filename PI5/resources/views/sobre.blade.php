@@ -28,12 +28,12 @@
 
                 <div class="mt-3">
                     <p class="h3 font-weight-bold"> Aluno:</p>
-                    <p class="h3"> Emerson Costa Santos </p>
+                    <p class="h4"> Emerson Costa Santos </p>
                 </div>
 
                 <div class="mt-3">
                     <p class="h3 font-weight-bold"> Contato: </p>
-                    <p class="h3"> emersoncs@outlook.com.br </p>
+                    <p class="h4"> emersoncs@outlook.com.br </p>
                 </div>
 
             </div>

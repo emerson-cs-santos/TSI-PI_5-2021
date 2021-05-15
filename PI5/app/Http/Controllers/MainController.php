@@ -33,6 +33,11 @@ class MainController extends Controller
         return view('sobre');
     }
 
+    public function ajuda()
+    {
+        return view('ajuda');
+    }
+
     public function premium()
     {
         return view('premium');

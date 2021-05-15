@@ -13,9 +13,9 @@ class CasosController extends Controller
 {
     public function index()
     {
-        $casos = Caso::selectRaw('casos.*')->where('user_id', '=', Auth::user()->id )->orderByDesc('id')->paginate(5);
+        $casos = Caso::selectRaw('casos.*')->where('user_id', '=', Auth::user()->id )->orderBy('nome')->get();
 
-        return view('casos.index', ['casos' => $casos] );
+        return view('casos.index', ['casos' => $casos] )->with( ['status_Buscado' => 'todos'] );
     }
 
     public function create()
@@ -50,7 +50,7 @@ class CasosController extends Controller
     {
         $caso = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
-        return view('Casos.show')->with('caso', $caso);
+        return view('casos.show')->with('caso', $caso);
     }
 
 
@@ -58,7 +58,7 @@ class CasosController extends Controller
     {
         $caso = Caso::withTrashed()->where('id', $id)->firstOrFail();
 
-        return view('Casos.edit')->with('caso', $caso);
+        return view('casos.edit')->with('caso', $caso);
     }
 
 
@@ -114,8 +114,8 @@ class CasosController extends Controller
 
     public function trashed()
     {
-        $casos = Caso::selectRaw('casos.*')->onlyTrashed()->where('user_id', '=', Auth::user()->id )->orderByDesc('id')->paginate(5);
-        return view('Casos.index', ['casos' => $casos]);
+        $casos = Caso::selectRaw('casos.*')->onlyTrashed()->where('user_id', '=', Auth::user()->id )->orderBy('nome')->get();
+        return view('casos.index', ['casos' => $casos])->with( ['status_Buscado' => 'todos'] );
     }
 
     public function restore($id)
@@ -126,38 +126,77 @@ class CasosController extends Controller
         return redirect()->back();
     }
 
+    public function buscarTrashed(Request $request)
+    {
+        $nome       = $request->input('nome');
+        $status     = $request->input('status');
+
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres ou joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
+
+        // Definindo campos e joins
+        $casos = Caso::selectRaw('casos.*')->onlyTrashed()->join('users', 'users.id', 'casos.user_id')->where('user_id', '=', Auth::user()->id );
+
+        // Definindo Wheres
+            // Nome
+            if ( !empty($nome) )
+            {
+                $casos = $casos->where('casos.nome', 'LIKE', '%' . $nome . '%');
+            }
+
+            // Status
+            if ( !empty($status) and $status !== 'todos' )
+            {
+                $casos = $casos->where('casos.status', $status);
+            }
+
+        // Definindo ordem
+        $casos = $casos->orderBy('nome');
+
+        // Após definir todos os joins, where etc, executa a select
+        $casos = $casos->get();
+
+        // Retornar View com registros e buscas aplicadas
+        return view('casos.index')
+        ->with('casos', $casos )
+        ->with('nome_Buscado',$nome)
+        ->with( ['status_Buscado' => $status] );
+    }
+
     public function buscar(Request $request)
     {
-        $buscar = $request->input('busca');
+        $nome       = $request->input('nome');
+        $status     = $request->input('status');
 
-        if($buscar != "")
-        {
-            $casos = Caso::selectRaw('casos.*')
-            ->where('user_id', '=', Auth::user()->id )
-            ->where ( 'casos.nome', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'casos.id', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'casos.status', 'LIKE', '%' . $buscar . '%' )
-            ->orderBy('nome')
-            ->paginate(5)
-            ->setPath ( '' );
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres ou joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
 
-            $pagination = $casos->appends ( array ('busca' => $request->input('busca')  ) );
+        // Definindo campos e joins e wheres da select que são fixas
+        $casos = Caso::selectRaw('casos.*')->join('users', 'users.id', 'casos.user_id')->where('user_id', '=', Auth::user()->id );
 
-            return view('Casos.index')
-            ->with('casos',$casos )->withQuery ( $buscar )
-            ->with('busca',$buscar);
-        }
-        else
-        {
-            $casos = Caso::selectRaw('casos.*')
-            ->where('user_id', '=', Auth::user()->id )
-            ->orderBy('nome')
-            ->paginate(5)
-            ->setPath ( '' );
+        // Definindo Wheres
+            // Nome
+            if ( !empty($nome) )
+            {
+                $casos = $casos->where('casos.nome', 'LIKE', '%' . $nome . '%');
+            }
 
-            return view('Casos.index')
-            ->with('casos', $casos )
-            ->with('busca','');
-        }
+            // Status
+            if ( !empty($status) and $status !== 'todos' )
+            {
+                $casos = $casos->where('casos.status', $status);
+            }
+
+        // Definindo ordem
+        $casos = $casos->orderBy('nome');
+
+        // Após definir todos os joins, where etc, executa a select
+        $casos = $casos->get();
+
+        // Retornar View com registros e buscas aplicadas
+        return view('casos.index')
+        ->with('casos', $casos )
+        ->with('nome_Buscado',$nome)
+        ->with( ['status_Buscado' => $status] );
     }
 }

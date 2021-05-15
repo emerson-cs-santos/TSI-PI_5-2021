@@ -24,6 +24,9 @@ Route::get('login/{provider}/callback', [RedeSocialLoginController::class, 'hand
     // Sobre
     Route::get('/sobre',             [MainController::class, 'sobre']) ->name('sobre');
 
+    // Ajuda
+    Route::get('/ajuda',             [MainController::class, 'ajuda']) ->name('ajuda');
+
     // Termos de uso e Politica de privacidade
     Route::get('/termos',             [MainController::class, 'termos']) ->name('termos');
 
@@ -41,6 +44,7 @@ Route::get('login/{provider}/callback', [RedeSocialLoginController::class, 'hand
         Route::get('trashed-Casos',             [CasosController::class, 'trashed' ] )          ->name('trashed-Casos.index');
         Route::put('restore-Casos/{caso}',      [CasosController::class, 'restore' ] )          ->name('restore-Casos.update');
         Route::any('buscar-Casos',              [CasosController::class, 'buscar' ] )           ->name('buscar-Casos');
+        Route::any('buscar-Casos-trashed',      [CasosController::class, 'buscarTrashed' ] )    ->name('buscar-Casos-trashed');
 
         // Ocorrencias
         Route::get('ocorrencias-index/{caso}',                                  [OcorrenciasController::class, 'index' ] )          ->name('Ocorrencias.index');
@@ -54,7 +58,7 @@ Route::get('login/{provider}/callback', [RedeSocialLoginController::class, 'hand
         Route::get('trashed-Ocorrencias/{caso}',                                [OcorrenciasController::class, 'trashed' ] )        ->name('trashed-Ocorrencias.index');
         Route::put('restore-Ocorrencias/{caso}/{ocorrencia}',                   [OcorrenciasController::class, 'restore' ] )        ->name('restore-Ocorrencias.update');
         Route::any('buscar-Ocorrencias/{caso}',                                 [OcorrenciasController::class, 'buscar' ] )         ->name('buscar-Ocorrencias');
-        Route::any('buscar-Ocorrencias-data/{caso}',                            [OcorrenciasController::class, 'buscarData' ] )     ->name('buscar-Ocorrencias.data');
+        Route::any('buscar-Ocorrencias-Trashed/{caso}',                         [OcorrenciasController::class, 'buscarTrashed' ] )  ->name('buscar-Ocorrencias-Trashed');
 
         Route::get('ocorrencias-file/{caso}/{ocorrencia}/{nomearquivo}',        [OcorrenciasController::class, 'getfile' ] )        ->name('Ocorrencias.getfile');
         Route::get('ocorrencias-file-todos/{caso}/{ocorrencia}',                [OcorrenciasController::class, 'getfileTodos' ] )   ->name('Ocorrencias.getfileTodos');
@@ -78,20 +82,23 @@ Route::get('login/{provider}/callback', [RedeSocialLoginController::class, 'hand
     {
         // Usuarios
         Route::resource('Users',                UsersController::class);
-        Route::get('trashed-Users',             [UsersController::class, 'trashed' ] )      ->name('trashed-Users.index');
-        Route::put('restore-Users/{user}',      [UsersController::class, 'restore' ] )      ->name('restore-Users.update');
-        Route::any('buscar-Users',              [UsersController::class, 'buscar' ] )       ->name('buscar-Users');
-        Route::put('perfil-type/{user}',        [UsersController::class, 'typeUpdate' ] )   ->name('perfil-type');
+        Route::get('trashed-Users',             [UsersController::class, 'trashed' ] )          ->name('trashed-Users.index');
+        Route::put('restore-Users/{user}',      [UsersController::class, 'restore' ] )          ->name('restore-Users.update');
+        Route::any('buscar-Users',              [UsersController::class, 'buscar' ] )           ->name('buscar-Users');
+        Route::any('buscar-Users-trashed',      [UsersController::class, 'buscarTrashed' ] )   ->name('buscar-Users-trashed');
+        Route::put('perfil-type/{user}',        [UsersController::class, 'typeUpdate' ] )       ->name('perfil-type');
 
         // Especialidades
         Route::resource('Especialidades',                       EspecialidadesController::class);
-        Route::get('trashed-Especialidades',                    [EspecialidadesController::class, 'trashed' ] )     ->name('trashed-Especialidades.index');
-        Route::put('restore-Especialidades/{especialidade}',    [EspecialidadesController::class, 'restore' ] )     ->name('restore-Especialidades.update');
-        Route::any('buscar-Especialidades',                     [EspecialidadesController::class, 'buscar' ] )      ->name('buscar-Especialidades');
+        Route::get('trashed-Especialidades',                    [EspecialidadesController::class, 'trashed' ] )         ->name('trashed-Especialidades.index');
+        Route::put('restore-Especialidades/{especialidade}',    [EspecialidadesController::class, 'restore' ] )         ->name('restore-Especialidades.update');
+        Route::any('buscar-Especialidades',                     [EspecialidadesController::class, 'buscar' ] )          ->name('buscar-Especialidades');
+        Route::any('buscar-Especialidades-trashed',             [EspecialidadesController::class, 'buscarTrashed' ] )   ->name('buscar-Especialidades-trashed');
 
         // Tipos
         Route::resource('Tipos',                        TiposController::class);
-        Route::get('trashed-Tipos',                    [TiposController::class, 'trashed' ] )     ->name('trashed-Tipos.index');
-        Route::put('restore-Tipos/{especialidade}',    [TiposController::class, 'restore' ] )     ->name('restore-Tipos.update');
-        Route::any('buscar-Tipos',                     [TiposController::class, 'buscar' ] )      ->name('buscar-Tipos');
+        Route::get('trashed-Tipos',                    [TiposController::class, 'trashed' ] )       ->name('trashed-Tipos.index');
+        Route::put('restore-Tipos/{especialidade}',    [TiposController::class, 'restore' ] )       ->name('restore-Tipos.update');
+        Route::any('buscar-Tipos',                     [TiposController::class, 'buscar' ] )        ->name('buscar-Tipos');
+        Route::any('buscar-Tipos-trashed',             [TiposController::class, 'buscarTrashed' ] ) ->name('buscar-Tipos-trashed');
     });

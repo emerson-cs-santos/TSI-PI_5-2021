@@ -19,7 +19,7 @@ class EspecialidadesController extends Controller
 
     public function indexBanco()
     {
-        $especialidades = Especialidade::selectRaw('especialidades.*')->orderByDesc('id')->paginate(5);
+        $especialidades = Especialidade::selectRaw('especialidades.*')->orderBy('name')->get();
         return $especialidades;
     }
 
@@ -46,7 +46,7 @@ class EspecialidadesController extends Controller
     {
         $especialidade = Especialidade::withTrashed()->where('id', $id)->firstOrFail();
 
-        return view('Especialidades.show')->with('especialidade', $especialidade);
+        return view('especialidades.show')->with('especialidade', $especialidade);
     }
 
 
@@ -54,7 +54,7 @@ class EspecialidadesController extends Controller
     {
         $especialidade = Especialidade::withTrashed()->where('id', $id)->firstOrFail();
 
-        return view('Especialidades.edit')->with('especialidade', $especialidade);
+        return view('especialidades.edit')->with('especialidade', $especialidade);
     }
 
 
@@ -99,7 +99,7 @@ class EspecialidadesController extends Controller
 
     public function trashed()
     {
-        $especialidades = Especialidade::selectRaw('especialidades.*')->onlyTrashed()->orderByDesc('id')->paginate(5);
+        $especialidades = Especialidade::selectRaw('especialidades.*')->onlyTrashed()->orderBy('name')->get();
         return view('especialidades.index', ['especialidades' => $especialidades]);
     }
 
@@ -111,36 +111,78 @@ class EspecialidadesController extends Controller
         return redirect()->back();
     }
 
+    public function buscarTrashed(Request $request)
+    {
+        $codigo = $request->input('codigo');
+        $nome   = $request->input('nome');
+
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres ou joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
+
+        // Definindo campos e joins e wheres da select que são fixas
+        $especialidades = Especialidade::selectRaw('especialidades.*')->onlyTrashed();
+
+        // Definindo Wheres
+            // Código
+            if ( !empty($codigo) )
+            {
+                $especialidades = $especialidades->where('especialidades.id', 'LIKE', '%' . $codigo . '%');
+            }
+
+            // Nome
+            if ( !empty($nome) )
+            {
+                $especialidades = $especialidades->where('especialidades.name', 'LIKE', '%' . $nome . '%');
+            }
+
+        // Definindo ordem
+        $especialidades = $especialidades->orderBy('name');
+
+        // Após definir todos os joins, where etc, executa a select
+        $especialidades = $especialidades->get();
+
+        // Retornar View com registros e buscas aplicadas
+        return view('especialidades.index')
+        ->with('especialidades', $especialidades )
+        ->with('codigo_Buscado',$codigo)
+        ->with( ['nome_Buscado' => $nome] );
+    }
+
     public function buscar(Request $request)
     {
-        $buscar = $request->input('busca');
+        $codigo = $request->input('codigo');
+        $nome   = $request->input('nome');
 
-        if($buscar != "")
-        {
-            $especialidades = Especialidade::selectRaw('especialidades.*')
-            ->where ( 'especialidades.name', 'LIKE', '%' . $buscar . '%' )
-            ->orWhere ( 'especialidades.id', 'LIKE', '%' . $buscar . '%' )
-            ->orderBy('name')
-            ->paginate(5)
-            ->setPath ( '' );
+        // É possivel adicionar metodos em linhas diferentes (where, join, etc), contanto que seja na ordem correta (select, joins, where, order by)
+        // Ao adicionar wheres ou joins é possivel adicionar apenas o que precisar, fazendo como as wheres abaixo.
 
-            $pagination = $especialidades->appends ( array ('busca' => $request->input('busca')  ) );
+        // Definindo campos e joins e wheres da select que são fixas
+        $especialidades = Especialidade::selectRaw('especialidades.*');
 
-            return view('especialidades.index')
-            ->with('especialidades',$especialidades )->withQuery ( $buscar )
-            ->with('busca',$buscar);
-        }
-        else
-        {
-            $especialidades = Especialidade::selectRaw('especialidades.*')
-            ->orderBy('name')
-            ->paginate(5)
-            ->setPath ( '' );
+        // Definindo Wheres
+            // Código
+            if ( !empty($codigo) )
+            {
+                $especialidades = $especialidades->where('especialidades.id', 'LIKE', '%' . $codigo . '%');
+            }
 
-            return view('especialidades.index')
-            ->with('especialidades', $especialidades )
-            ->with('busca','');
-        }
+            // Nome
+            if ( !empty($nome) )
+            {
+                $especialidades = $especialidades->where('especialidades.name', 'LIKE', '%' . $nome . '%');
+            }
+
+        // Definindo ordem
+        $especialidades = $especialidades->orderBy('name');
+
+        // Após definir todos os joins, where etc, executa a select
+        $especialidades = $especialidades->get();
+
+        // Retornar View com registros e buscas aplicadas
+        return view('especialidades.index')
+        ->with('especialidades', $especialidades )
+        ->with('codigo_Buscado',$codigo)
+        ->with( ['nome_Buscado' => $nome] );
     }
 
 }

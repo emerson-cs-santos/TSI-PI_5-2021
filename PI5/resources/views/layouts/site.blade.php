@@ -82,6 +82,10 @@
                         @endif
 
                         <li>
+                            <a href="{{route('ajuda')}}"><i class="fas fa-question-circle"></i> Ajuda</a>
+                        </li>
+
+                        <li>
                             <a href="{{route('sobre')}}"><i class="fas fa-info-circle"></i> Sobre</a>
                         </li>
 
@@ -177,14 +181,17 @@
                     </div>
                     <!-- Caonteiner do conteudo fim -->
 
+
+
                 </main>
                 <!-- Conteudo da página fim -->
+
 
             </div>
             <!-- Menu de acesso rápido a direita fim -->
 
         </div>
-        <!-- Caonteiner principal Fim -->
+        <!-- Conteiner principal Fim -->
 
         <!-- Footer -->
         <footer class="container-fluid">
