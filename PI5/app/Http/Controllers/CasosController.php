@@ -8,6 +8,8 @@ use App\Models\Ocorrencia;
 use App\Http\Requests\CreateCasosRequest;
 use App\Http\Requests\EditCasosRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Models\arquivo;
+use Illuminate\Support\Facades\File;
 
 class CasosController extends Controller
 {
@@ -98,6 +100,9 @@ class CasosController extends Controller
 
             foreach ($ocorrenciasApagar as $ocorrenciaApagar)
             {
+                // Apagar arquivos da ocorrência
+                $this->deletarAnexos( $ocorrenciaApagar->id, $ocorrenciaApagar->caso_id, Auth::user()->id );
+
                 $ocorrenciaApagar->forceDelete();
             }
 
@@ -198,5 +203,34 @@ class CasosController extends Controller
         ->with('casos', $casos )
         ->with('nome_Buscado',$nome)
         ->with( ['status_Buscado' => $status] );
+    }
+
+    public function deletarAnexos( int $ocorrenciaId, int $casoId, int $userID )
+    {
+        // Validando se o arquivo pertence ao usuário, caso e ocorrencia
+        $arquivos = arquivo::where('user_id', '=', $userID )
+        ->where('caso_id', $casoId)
+        ->where('ocorrencia_id', $ocorrenciaId)
+        ->get();
+
+        $nomeArquivoApagar = '';
+
+        foreach ( $arquivos as $arquivo )
+        {
+            $nomeArquivoApagar = $arquivo->nome;
+
+            if ( $nomeArquivoApagar !== '' )
+            {
+                // Apagar do banco
+                foreach ( $arquivos as $arquivo )
+                {
+                    $arquivo->delete();
+                }
+
+                // Apagar arquivo
+                $file = public_path() .'/files/' . $nomeArquivoApagar;
+                File::delete($file);
+            }
+        }
     }
 }

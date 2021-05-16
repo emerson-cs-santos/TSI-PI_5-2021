@@ -26,7 +26,7 @@
                                     {{ csrf_field() }}
 
                                         <div class="form-group">
-                                            <label for="tipo">Tipo do Relatório @if ( Auth::user()->premium == 'nao' ) Apenas disponível modo simples @endif </label>
+                                            <label for="tipo">Tipo do Relatório @if ( Auth::user()->premium == 'nao' ) no momento está disponível apenas no modo simples. Para ter acesso ao modo completo, se torne usuário premium. @endif </label>
                                             <select name="tipo" class="form-control" id="tipo">
                                                 <option value="simples" @if( isset($buscarTipo) )  @if($buscarTipo == 'simples') selected @endif  @else selected @endif    >Simples - Apenas as 5 últimas Ocorrências</option>
 

@@ -250,6 +250,9 @@ class OcorrenciasController extends Controller
 
         if($ocorrencia->trashed())
         {
+            // Deletar anexos da ocorrência
+            $this->deletefileTodos( $ocorrenciaId, $casoId);
+
             $ocorrencia->forceDelete();
             session()->flash('success', 'Ocorrência removida com sucesso!');
         }
@@ -553,14 +556,14 @@ class OcorrenciasController extends Controller
         ->where('nome', $nomeArquivo )
         ->get();
 
-        $nomeArquivoBaixar = '';
+        $nomeArquivoApagar = '';
 
         foreach ( $arquivos as $arquivo )
         {
-            $nomeArquivoBaixar = $arquivo->nome;
+            $nomeArquivoApagar = $arquivo->nome;
         }
 
-        if ( $nomeArquivoBaixar == '' )
+        if ( $nomeArquivoApagar == '' )
         {
             session()->flash('error', "Arquivo não encontrado!" );
             return redirect()->back();
@@ -574,7 +577,7 @@ class OcorrenciasController extends Controller
             }
 
             // Apagar arquivo
-            $file = public_path() .'/files/' . $nomeArquivoBaixar;
+            $file = public_path() .'/files/' . $nomeArquivoApagar;
             File::delete($file);
 
             session()->flash('success', 'Arquivo apagado com sucesso!');
@@ -586,5 +589,18 @@ class OcorrenciasController extends Controller
         // ou
         // $files = array($file1, $file2);
         // File::delete($files);
+    }
+
+    public function deletefileTodos( int $ocorrenciaID, int $casoID )
+    {
+        $arquivos = arquivo::where('user_id', '=', Auth::user()->id )
+        ->where('caso_id', $casoID)
+        ->where('ocorrencia_id', $ocorrenciaID)
+        ->get();
+
+        foreach ( $arquivos as $arquivo )
+        {
+            $this->deletefile($casoID, $ocorrenciaID, $arquivo->nome );
+        }
     }
 }

@@ -102,7 +102,7 @@
                                                         </td>
 
                                                         <td>
-                                                            <a href="{{ route('Ocorrencias.index', $caso->id) }}" class="btn btn-xs btn-secondary"> <i class="fas fa-file-medical"></i> Ocorrencias</a>
+                                                            <a href="{{ route('Ocorrencias.index', $caso->id) }}" class="btn btn-xs btn-secondary"> <i class="fas fa-file-medical"></i> Ocorrências</a>
                                                         </td>
 
                                                         @else
