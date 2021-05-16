@@ -17,7 +17,7 @@ class MainController extends Controller
         $caso = Caso::selectRaw('casos.*')->where('status', '=', 'Curado')->get();
         $casoCount = $caso->count();
 
-        $premium = User::selectRaw('users.*')->where('premium', '=', 'Sim')->get();
+        $premium = User::selectRaw('users.*')->where('premium', '=', 'sim')->get();
         $premiumCount = $premium->count();
 
         return view('index')->with('userCount',$userCount)->with('casoCount',$casoCount)->with('premiumCount',$premiumCount);

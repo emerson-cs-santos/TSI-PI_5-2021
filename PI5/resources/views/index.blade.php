@@ -16,8 +16,8 @@
                     @include('exibirAlert')
 
                     <p class="mt-3 h5">Cansado de não sentir que está progredindo em um problema médico? </p>
-                    <p>Isso pode estar ocorrendo por não estar juntando todas as informações que cada médico descobre. O Correto seria os próprios médicos passarem essas informações entre si, mas isso quase sempre não é possível, ainda mais trocando de clinicas atendidas pelo convenio ou mesmo pelo SUS.</p>
-                    <p>Aqui é possível fazer total controle não só seu, mas de pessoas que estão sob seus cuidados.</p>
+                    <p>Isso pode estar ocorrendo por não estar juntando todas as informações que cada médico descobre. O correto seria os próprios médicos passarem essas informações entre si, mas isso quase sempre não é possível, ainda mais trocando de clínicas atendidas pelo convênio ou mesmo pelo SUS.</p>
+                    <p>Aqui é possível ter total controle dos seus casos médicos, inclusive de pessoas que estão sob seus cuidados (recomendado ter um login para essas pessoas também).</p>
 
                     <p class="mt-2 h4 text-center"> @if( !empty(Auth::user()->name)  ) Olá {{Auth::user()->name}}, controle @else Controle @endif sua saúde agora mesmo: </p>
                 </div>
