@@ -141,7 +141,7 @@
                                     <ul class="h5">
                                         <li> <strong>Alterar nível</strong> - Essa opção vai mudar o nivel de acesso do usuário, de Padrão para Administrador e vice versa.</li>
                                         <li> <strong>Mover para lixeira</strong> - Registro não será mais considerado no sistema, mas é possível restaurar usando a lixeira.</li>
-                                        <li> <strong>Qtd. de Casos</strong> - Mostra quando casos o usuário tem.</li>
+                                        <li> <strong>Qtd. de Casos</strong> - Mostra quantos casos o usuário tem.</li>
                                     </ul>
 
                                     <p class="h5"> <strong>Lixeira</strong> - Mostra usuários excluídos, podendo além de filtrar:</p>
@@ -154,7 +154,7 @@
                                 <div class="tab-pane fade" id="pills-especialidades" role="tabpanel" aria-labelledby="pills-especialidades-tab">
                                     <p class="h5">Especialidades médicas - Filtros, e informações básicas.</p>
 
-                                    <p class="h5"><strong>Qtd. de Casos</strong> - Mostra quando casos estão usando a especialidade, considerando todos os usuários.</p>
+                                    <p class="h5"><strong>Qtd. de Casos</strong> - Mostra quantos casos estão usando a especialidade, considerando todos os usuários.</p>
 
                                     <p class="h5"><strong>Botões de ação:</strong></p>
                                     <ul class="h5">
@@ -175,7 +175,7 @@
                                     <p class="h5">Tipos de ocorrências, exemplos: consulta, exame, fisioterapia. Filtros, e informações básicas.</p>
                                     <ul class="h5">
                                         <li><strong>Cor</strong>  - Ao definir uma cor, ela será utilizada nos relatórios para destacar a informação.</li>
-                                        <li><strong>Qtd. de Casos</strong>  - Mostra quando casos estão usando o tipo, considerando todos os usuários</li>
+                                        <li><strong>Qtd. de Casos</strong>  - Mostra quantos casos estão usando o tipo, considerando todos os usuários</li>
                                     </ul>
 
                                     <p class="h5"><strong>Botões de ação:</strong></p>
