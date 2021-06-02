@@ -196,7 +196,7 @@
         <!-- Footer -->
         <footer class="container-fluid">
             <div class="col-12 text-center text-dark font-weight-bold">
-                <p>&copy; Copyright. Senac 2021 - Sistemas para Internet - Projeto integrador 5</p>
+                <p>&copy; Copyright: Emerson Costa Santos. Sistemas para Internet - Projeto integrador 5, Senac 2021</p>
             </div>
         </footer>
 
