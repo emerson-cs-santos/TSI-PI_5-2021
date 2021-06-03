@@ -102,7 +102,7 @@
 
                                                     <div class="form-group">
                                                         <label for="crm">CRM</label>
-                                                        <textarea name="crm" class='form-control' id="crm" rows=1 placeholder="Digite o crm do médico/profissional">{{old('crm')}}</textarea>
+                                                        <textarea name="crm" class='form-control' id="crm" rows=2 placeholder="Digite o crm do médico/profissional">{{old('crm')}}</textarea>
                                                     </div>
 
                                                     <div class="form-group">
