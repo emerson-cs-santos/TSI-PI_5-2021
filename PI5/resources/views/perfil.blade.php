@@ -128,7 +128,7 @@
                     <div class="card">
                         <div class="card-header">Termos de Uso e Política de Privacidade</div>
                         <div class="card-body">
-                            <a href="{{ route('termos') }}" target="_blank" class="btn btn-secondary">Visualizar</a>
+                            <a href="{{ route('termos') }}" target="_blank" class="btn btn-secondary"><i class="fas fa-external-link-alt"></i> Visualizar</a>
                         </div>
                     </div>
                 </div>
